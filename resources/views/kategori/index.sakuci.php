@@ -22,7 +22,7 @@
     <td> {{ $kategoris->kode_kategori }} </td>
     <td> {{ $kategoris->keterangan }} </td>
     <td>
-         <a href="" class="btn btn-primary btn-sm">Edit</a>
+         <a href="{{ route('kategori.edit', ['kategori' => $kategoris->id_kategori]) }}" class="btn btn-primary btn-sm">Edit</a>
          <a href="" class="btn btn-danger btn-sm">Hapus</a>
     </td>
 </tr>
