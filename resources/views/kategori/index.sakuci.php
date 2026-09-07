@@ -3,6 +3,9 @@
 @section('title', config('app.name') . ' -- Kerangka PHP Ringan')
 
 @section('content')
+<h1>Daftar Kategori</h1>
+<a href="{{ route('kategori.create') }}" class="btn btn-danger mb-3">Tambah Kategori</a>
+
 <table class = "table table-sm align-middle"> 
 <tr>
     <th>No</th>
