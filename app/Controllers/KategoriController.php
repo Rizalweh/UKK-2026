@@ -21,7 +21,7 @@ class KategoriController extends Controller
     {
         $data = $request->validate([
             'nama_kategori' => 'required|min:3|max:100',
-            'kategori' => 'required|min:3|max:100',
+            'kode_kategori' => 'required|varchar|min:3|max:100',
             'keterangan' => 'required|min:3|max:100',
         ]);
         Kategori::create($data);
