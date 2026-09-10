@@ -16,6 +16,6 @@
 
     <label>Keterangan</label>
     <input type="text" name="keterangan" id="keterangan" class="form-control" value="{{ $data->keterangan }}" required>
-    <button type="submit" class="btn btn-primary">Simpan</button>
+    <button type="submit" class="btn btn-primary mt-2">Simpan</button>
 </form>
 @endsection

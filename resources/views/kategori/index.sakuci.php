@@ -6,7 +6,7 @@
 <h1>Daftar Kategori</h1>
 <a href="{{ route('kategori.create') }}" class="btn btn-danger mb-3">Tambah Kategori</a>
 
-<table class = "table table-sm align-middle"> 
+<table class = "table table-sm align-middle table-hover table-bordered table-striped"> 
 <tr>
     <th>No</th>
     <th>nama kategori</th>
@@ -23,8 +23,10 @@
     <td> {{ $kategoris->keterangan }} </td>
     <td>
          <a href="{{ route('kategori.edit', ['kategori' => $kategoris->id_kategori]) }}" class="btn btn-primary btn-sm">Edit</a>
-         <a href="" class="btn btn-danger btn-sm">Hapus</a>
-    </td>
+         <form action="{{ route('kategori.destroy', ['kategori' => $kategoris->id_kategori]) }}" method="POST" onsubmit="return confirm('kamu yakin banget mau hapus?')" class="d-inline" >
+              @csrf
+              @method('DELETE')
+              <button type="submit" class="btn btn-danger btn-sm">Hapus</button></td>
 </tr>
 @endforeach
 </table>
