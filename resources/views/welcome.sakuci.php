@@ -5,7 +5,6 @@
 @section('content')
 
     @php
-        // TODO: ganti data contoh ini dengan query asli, misalnya:
         // $stat = ['total' => Alat::count(), 'tersedia' => Alat::where('status','tersedia')->count(), ...];
         // $kategori = Kategori::all();
         // $alatTerbaru = Alat::with('kategori')->latest()->take(6)->get();
@@ -32,11 +31,11 @@
         <div class="lg:col-span-7">
             <div class="font-mono text-sm mb-4" style="color: var(--text-dim);">Selamat datang{{ ($currentUser ?? null) ? ', ' . $currentUser->username : '' }}</div>
             <h1 class="font-display text-4xl lg:text-[3rem] font-semibold leading-[1.1] mb-4">
-                Pinjam alat yang kamu butuh,
-                <span style="color: var(--brand-bright);">tanpa ribet.</span>
+                Pinjam Sarana Prasarana di
+                <span style="color: var(--brand-bright);">SARPRAS TECH</span>
             </h1>
             <p class="text-lg leading-relaxed mb-6" style="color: var(--text-dim); max-width: 34rem;">
-                Cek ketersediaan, ajukan peminjaman, dan pantau status alat -- semua dari satu halaman.
+                Cek ketersediaan, ajukan peminjaman, dan pantau alat semua dari satu halaman.
             </p>
         </div>
 
@@ -61,8 +60,6 @@
             </div>
         </div>
     </section>
-
-    {{-- Cara meminjam --}}
     <section>
         <h2 class="font-display text-xl font-semibold mb-6">Cara meminjam</h2>
         <div class="grid md:grid-cols-4 gap-5">
