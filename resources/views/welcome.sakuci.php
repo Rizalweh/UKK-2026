@@ -69,7 +69,7 @@
 
                 <div data-rise class="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium backdrop-blur" style="border-color:var(--wp-card-border); background:var(--wp-card-bg); color:var(--wp-accent);">
                     <i data-lucide="zap" class="h-4 w-4" stroke-width="1.5"></i>
-                    Peminjaman alat sekolah, satu pintu
+                   Aplikasi Peminjaman Sarana Dan Prasarana Sekolah
                 </div>
 
                 <div class="relative mt-7">
@@ -106,7 +106,7 @@
                 <div data-rise style="transition-delay:.3s;" class="mt-8 flex flex-col items-center gap-3 sm:flex-row">
                     @if (!$currentUser)
                         <a href="{{ route('login') }}" class="group inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-base font-medium transition-all duration-300 hover:-translate-y-0.5" style="background:var(--wp-cta-bg); color:var(--wp-cta-text);">
-                            Masuk buat pinjam alat
+                            Masuk untuk pinjam alat
                             <i data-lucide="arrow-right" class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5"></i>
                         </a>
                         <a href="{{ route('register') }}" class="inline-flex items-center justify-center gap-2 rounded-full border px-7 py-3.5 text-base font-medium transition-all duration-300 hover:-translate-y-0.5" style="border-color:var(--wp-card-border); background:var(--wp-card-bg); color:var(--wp-text-strong);">
