@@ -1,4 +1,4 @@
-@extends('layouts.app-daisy-v2')
+@extends('layouts.app')
 
 @section('title', config('app.name') . ' -- Peminjaman Alat')
 
