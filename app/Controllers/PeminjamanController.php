@@ -6,6 +6,7 @@ use Sakuci\Controller;
 use Sakuci\Http\Request;
 use App\Models\Peminjaman;
 use App\Models\Alat;
+use App\Models\User;
 
 class PeminjamanController extends Controller
 {

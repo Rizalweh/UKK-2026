@@ -4,7 +4,14 @@
 
 @section('content')
 <h1>Daftar Alat Tersedia</h1>
-<table>
+
+@if (session('success'))
+<div class="alert alert-success">{{ session('success') }}</div>
+@endif
+@if (session('error'))
+<div class="alert alert-danger">{{ session('error') }}</div>
+@endif
+
 @foreach ($data as $item)
 <form id="form-ajukan-{{ $item->id_alat }}" action="{{ route('peminjam.peminjaman.ajukan') }}" method="post" class="d-none">
     @csrf
@@ -19,10 +26,11 @@
     <th>Kategori</th>
     <th>Stok</th>
     <th>Foto</th>
-    <th>Kondisi</th>
     <th>Tanggal Pinjam</th>
     <th>Tanggal Kembali (Rencana)</th>
-    <th>Ajukan Pinjam</th>
+    <th>Jumlah</th>
+    <th>Catatan</th>
+    <th>Aksi</th>
 </tr>
 @php $no = 1; @endphp
 @foreach ($data as $item)
@@ -31,31 +39,28 @@
     <td>{{ $item->nama_alat }}</td>
     <td>{{ $item->kategori->nama_kategori ?? '-' }}</td>
     <td>{{ $item->stok }}</td>
+    <td><img src="/uploads/foto_alat/{{ $item->foto_alat }}" alt="Foto {{ $item->nama_alat }}" width="80"></td>
     <td>
-        <img src="/uploads/foto_alat/{{ $item->foto_alat }}" alt="Foto {{ $item->nama_alat }}" width="80">
-    </td>
-    <td>{{ $item->kondisi }}</td>
-    <td>
-        <label for="tgl_pinjam_{{ $item->id_alat }}" class="form-label small mb-1">Tgl Pinjam</label>
+        <label for="tgl_pinjam_{{ $item->id_alat }}">Tgl Pinjam</label>
         <input type="date" id="tgl_pinjam_{{ $item->id_alat }}" name="tanggal_pinjam" required
                class="form-control form-control-sm" form="form-ajukan-{{ $item->id_alat }}">
     </td>
     <td>
-        <label for="tgl_kembali_{{ $item->id_alat }}" class="form-label small mb-1">Tgl Kembali</label>
+        <label for="tgl_kembali_{{ $item->id_alat }}">Tgl Kembali</label>
         <input type="date" id="tgl_kembali_{{ $item->id_alat }}" name="tanggal_kembali_rencana" required
                class="form-control form-control-sm" form="form-ajukan-{{ $item->id_alat }}">
     </td>
     <td>
-        <label for="jumlah_{{ $item->id_alat }}" class="form-label small mb-1">Jumlah</label>
+        <label for="jumlah_{{ $item->id_alat }}">Jumlah</label>
         <input type="number" id="jumlah_{{ $item->id_alat }}" name="jumlah_pinjam" min="1" max="{{ $item->stok }}" required
-               class="form-control form-control-sm mb-1" style="width:80px"
-               form="form-ajukan-{{ $item->id_alat }}">
-
-        <label for="catatan_{{ $item->id_alat }}" class="form-label small mb-1">Keperluan</label>
+               class="form-control form-control-sm" style="width:70px" form="form-ajukan-{{ $item->id_alat }}">
+    </td>
+    <td>
+        <label for="catatan_{{ $item->id_alat }}">Keperluan</label>
         <input type="text" id="catatan_{{ $item->id_alat }}" name="catatan"
-               class="form-control form-control-sm mb-2"
-               form="form-ajukan-{{ $item->id_alat }}">
-
+               class="form-control form-control-sm" form="form-ajukan-{{ $item->id_alat }}">
+    </td>
+    <td>
         <button type="submit" form="form-ajukan-{{ $item->id_alat }}" class="btn btn-primary btn-sm">Ajukan</button>
     </td>
 </tr>

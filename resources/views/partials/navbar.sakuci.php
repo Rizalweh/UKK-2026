@@ -70,12 +70,17 @@
                         <i class="bi bi-journal-text"></i><span>Peminjaman</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ is_route('petugas.pengembalian.index') ? 'active' : '' }}" href="{{ route('petugas.pengembalian.index') }}">
+                        <i class="bi bi-arrow-counterclockwise"></i><span>Pengembalian</span>
+                    </a>
                 @endif
 
                      <!--peminjam -->
                    @if ($currentUser->role === 'peminjam')  
                       <a class="nav-link {{ is_route('peminjam.alat.index') ? 'active' : '' }}" href="{{ route('peminjam.alat.index') }}">
                         <i class="bi bi-journal-text"></i><span>Pinjaman Saya</span>
+                    </a>
                         @endif
               
                         <!-- admin -->

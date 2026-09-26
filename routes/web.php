@@ -9,6 +9,8 @@ use App\Controllers\Core\UserController;
 use App\Controllers\KategoriController;
 use App\Controllers\AlatController;
 use App\Controllers\PeminjamanController;
+use App\Controllers\WelcomeController;
+use App\Controllers\PengembalianController;
 use Sakuci\Route;
 
 /*
@@ -23,9 +25,7 @@ use Sakuci\Route;
 |   function () { ... }                -> closure
 */
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/', [WelcomeController::class, 'index'])->name('home');
 
 Route::get('/docs', [DocsController::class, 'index'])->name('docs');
 
@@ -79,12 +79,18 @@ Route::group(['prefix' => 'petugas', 'middleware' => 'petugas'], function () {
     Route::get('/peminjaman', [PeminjamanController::class, 'index'])->name('petugas.peminjaman.index');
     Route::put('/peminjaman/{id}/setujui', [PeminjamanController::class, 'setujui'])->name('petugas.peminjaman.setujui');
     Route::put('/peminjaman/{id}/tolak', [PeminjamanController::class, 'tolak'])->name('petugas.peminjaman.tolak');
+
+    Route::get('/pengembalian', [PengembalianController::class, 'index'])->name('petugas.pengembalian.index');
+    Route::get('/pengembalian/{id}/proses', [PengembalianController::class, 'create'])->name('petugas.pengembalian.create');
+    Route::post('/pengembalian/{id}/proses', [PengembalianController::class, 'store'])->name('petugas.pengembalian.store');
+
 });
 
 Route::group(['prefix' => 'peminjam', 'middleware' => 'peminjam'], function () {
     Route::get('/alat', [AlatController::class, 'daftarAlat'])->name('peminjam.alat.index');
     Route::post('/peminjaman/ajukan', [PeminjamanController::class, 'ajukan'])->name('peminjam.peminjaman.ajukan');
 });
+    
 
 /*
 |--------------------------------------------------------------------------
