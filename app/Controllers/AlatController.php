@@ -107,4 +107,11 @@ class AlatController extends Controller
         $data->delete();
         return redirect(route('alat.index'))->with('success', 'Data berhasil dihapus');
     }
+
+    // Peminjam: hanya tampilkan alat dengan stok tersedia
+public function daftarAlat(Request $request)
+{
+    $data = Alat::where('stok', '>', 0)->OrderBy('nama_alat', 'asc')->paginate(9);
+    return view('peminjam.alat.index', compact('data'));
+}
 }
