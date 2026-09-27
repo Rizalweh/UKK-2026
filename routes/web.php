@@ -8,9 +8,11 @@ use App\Controllers\Core\RoleController;
 use App\Controllers\Core\UserController;
 use App\Controllers\KategoriController;
 use App\Controllers\AlatController;
+use App\Controllers\Core\LogAktivitasController as CoreLogAktivitasController;
 use App\Controllers\PeminjamanController;
 use App\Controllers\WelcomeController;
 use App\Controllers\PengembalianController;
+use App\Controllers\LogAktivitasController;
 use Sakuci\Route;
 
 /*
@@ -47,6 +49,7 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/', [DashboardController::class, 'admin'])->name('admin.dashboard');
+    
 
     Route::get('/roles', [RoleController::class, 'index'])->name('admin.roles.index');
     Route::post('/roles', [RoleController::class, 'store'])->name('admin.roles.store');
@@ -55,6 +58,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
     Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
     Route::post('/users', [UserController::class, 'store'])->name('admin.users.store');
+    Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('admin.users.edit');
+    Route::put('/users/{user}', [UserController::class, 'update'])->name('admin.users.update');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('admin.users.destroy');
+
+    Route::get('/log', [LogAktivitasController::class, 'index'])->name('admin.log.index');
 
     Route::get('/database/export', [DatabaseController::class, 'export'])->name('admin.database.export');
 

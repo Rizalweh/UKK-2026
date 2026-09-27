@@ -32,17 +32,15 @@
 {{-- Sidebar: laci geser di layar kecil, menetap di layar besar (offcanvas-lg bawaan Bootstrap) --}}
 <aside class="sidebar offcanvas-lg offcanvas-start" tabindex="-1" id="sidebar" aria-label="Menu utama">
     <div class="offcanvas-body">
-
-        <div class="sidebar-brand">
+<div class="sidebar-brand">
             <button id="themeToggle" type="button" class="logo-toggle"
                     aria-label="Ganti tema terang/gelap (status database: {{ $dbConnected ? 'terhubung' : 'tidak terhubung' }})"
                     title="Ganti tema terang/gelap">
-                <svg width="28" height="28" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display: block;" aria-hidden="true">
-                    <circle class="logo-ring" cx="16" cy="16" r="15"/>
-                    <circle cx="16" cy="16" r="9" fill="{{ $dbConnected ? '#28a745' : '#dc3545' }}"/>
-                </svg>
+                <i class="bi bi-sun-fill theme-icon theme-icon-light" aria-hidden="true"></i>
+                <i class="bi bi-moon-stars-fill theme-icon theme-icon-dark" aria-hidden="true"></i>
+                <span class="db-status-dot" style="background-color: {{ $dbConnected ? '#28a745' : '#dc3545' }};"></span>
             </button>
-            <a class="navbar-brand fw-semibold m-0 me-auto" href="{{ route('home') }}">{{ config('app.name') }}</a>
+            <a class="navbar-brand fw-semibold m-0 me-auto sidebar-text" href="{{ route('home') }}">{{ config('app.name') }}</a>
             <button type="button" class="btn-close d-lg-none" data-bs-dismiss="offcanvas"
                     data-bs-target="#sidebar" aria-label="Tutup menu"></button>
         </div>
@@ -94,6 +92,25 @@
             <li class="nav-item">
                 <a class="nav-link {{ is_route('alat.index') ? 'active' : '' }}" href="{{ route('alat.index') }}">
                     <i class="bi bi-tools"></i><span>Alat</span>
+                </a>
+            </li>
+                
+            <li class="nav-item">
+                <a class="nav-link {{ is_route('admin.log.index') ? 'active' : '' }}" href="{{ route('admin.log.index') }}">
+                    <i class="bi bi-clock-history"></i><span>Log Aktivitas</span>
+                </a>
+
+            <hr class="my-2">
+
+            <li class="nav-item">
+                <a class="nav-link {{ is_route('admin.users.index') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">
+                    <i class="bi bi-people"></i><span>Users</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link {{ is_route('admin.roles.index') ? 'active' : '' }}" href="{{ route('admin.roles.index') }}">
+                    <i class="bi bi-shield-lock"></i><span>Roles</span>
                 </a>
             </li>
 

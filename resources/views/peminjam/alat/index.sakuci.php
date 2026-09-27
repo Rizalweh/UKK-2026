@@ -5,13 +5,6 @@
 @section('content')
 <h1>Daftar Alat Tersedia</h1>
 
-@if (session('success'))
-<div class="alert alert-success">{{ session('success') }}</div>
-@endif
-@if (session('error'))
-<div class="alert alert-danger">{{ session('error') }}</div>
-@endif
-
 @foreach ($data as $item)
 <form id="form-ajukan-{{ $item->id_alat }}" action="{{ route('peminjam.peminjaman.ajukan') }}" method="post" class="d-none">
     @csrf

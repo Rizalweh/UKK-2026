@@ -7,6 +7,7 @@ use App\Models\User;
 use Sakuci\Controller;
 use Sakuci\Http\Request;
 use Sakuci\Session;
+use App\Models\LogAktivitas;
 
 class AuthController extends Controller
 {
@@ -68,15 +69,23 @@ class AuthController extends Controller
 
         Session::put('user_id', $user->id);
 
+        LogAktivitas::catat($user->id, 'Login');
+
         return redirect($user->role === 'admin' ? '/admin' : '/dashboard')
             ->with('success', 'Selamat datang, ' . $user->username . '.');
     }
 
     public function logout()
     {
+        $user = User::current();
+         if ($user) {
+            LogAktivitas::catat($user->id, "Logout ({$user->username})");
+        }
+
         Session::forget('user_id');
 
         return redirect('/login')->with('success', 'Berhasil logout.');
     }
+    
 }
 

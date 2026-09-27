@@ -7,6 +7,7 @@ use Sakuci\Http\Request;
 use App\Models\Peminjaman;
 use App\Models\Alat;
 use App\Models\User;
+use App\Models\LogAktivitas;
 
 class PeminjamanController extends Controller
 {
@@ -24,6 +25,9 @@ class PeminjamanController extends Controller
     public function setujui(Request $request, $id)
     {
         $peminjaman = Peminjaman::FindOrFail($id);
+        $petugas = User::current();
+
+        LogAktivitas::catat(User::current()->id, "Menyetujui pengajuan peminjaman {$peminjaman->kode_peminjaman} oleh user ID {$peminjaman->id_peminjam}");
 
         if ($peminjaman->status_peminjaman !== 'pending') {
             return redirect(route('petugas.peminjaman.index'))
@@ -50,6 +54,9 @@ class PeminjamanController extends Controller
     public function tolak(Request $request, $id)
     {
         $peminjaman = Peminjaman::FindOrFail($id);
+        $petugas = User::current();
+
+        LogAktivitas::catat(User::current()->id, "Menolak pengajuan peminjaman {$peminjaman->kode_peminjaman} oleh user ID {$peminjaman->id_peminjam}");
 
         if ($peminjaman->status_peminjaman !== 'pending') {
             return redirect(route('petugas.peminjaman.index'))
@@ -69,6 +76,7 @@ class PeminjamanController extends Controller
     {
         $data = $request->all();
         $user = User::current();
+        
 
         $alat = Alat::FindOrFail($data['id_alat']);
 
@@ -88,6 +96,8 @@ class PeminjamanController extends Controller
             'status_peminjaman'       => 'pending',
             'catatan'                 => $data['catatan'] ?? null,
         ]);
+
+        LogAktivitas::catat($user->id, "Mengajukan peminjaman {$alat->nama_alat} (jumlah: {$data['jumlah_pinjam']})");
 
         return redirect(route('peminjam.alat.index'))
             ->with('success', 'Pengajuan berhasil dikirim, menunggu persetujuan Petugas.');

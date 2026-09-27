@@ -8,6 +8,7 @@ use App\Models\Peminjaman;
 use App\Models\Pengembalian;
 use App\Models\Alat;
 use App\Models\User;
+use App\Models\LogAktivitas;
 
 class PengembalianController extends Controller
 {
@@ -92,6 +93,8 @@ class PengembalianController extends Controller
         $pesan = $denda > 0
             ? "Pengembalian diproses. Terlambat {$hariTelat} hari, denda Rp" . number_format($denda, 0, ',', '.')
             : "Pengembalian diproses tanpa denda.";
+
+            LogAktivitas::catat($petugas->id, "Memproses pengembalian peminjaman {$peminjaman->kode_peminjaman} oleh user ID {$peminjaman->id_peminjam}. Terlambat: {$hariTelat} hari, denda: Rp" . number_format($denda, 0, ',', '.'));
 
         return redirect(route('petugas.pengembalian.index'))->with('success', $pesan);
     }
