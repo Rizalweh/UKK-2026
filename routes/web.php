@@ -97,6 +97,11 @@ Route::group(['prefix' => 'petugas', 'middleware' => 'petugas'], function () {
 Route::group(['prefix' => 'peminjam', 'middleware' => 'peminjam'], function () {
     Route::get('/alat', [AlatController::class, 'daftarAlat'])->name('peminjam.alat.index');
     Route::post('/peminjaman/ajukan', [PeminjamanController::class, 'ajukan'])->name('peminjam.peminjaman.ajukan');
+
+    Route::get('/peminjaman', [PeminjamanController::class, 'daftarPeminjaman'])->name('peminjam.peminjaman.index');
+    Route::put('/peminjaman/{id}/kembali', [PeminjamanController::class, 'ajukanPengembalian'])->name('peminjam.kembali');
+    Route::get('/peminjaman/riwayat', [PeminjamanController::class, 'riwayat'])->name('peminjam.riwayat');
+    Route::get('/peminjaman/dipinjam', [PeminjamanController::class, 'sedangDipinjam'])->name('peminjam.dipinjam');
 });
     
 

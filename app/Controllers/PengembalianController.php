@@ -17,7 +17,7 @@ class PengembalianController extends Controller
     // Petugas: daftar peminjaman yang sedang dipinjam (siap dikembalikan)
     public function index(Request $request)
     {
-        $data = Peminjaman::where('status_peminjaman', 'disetujui')
+        $data = Peminjaman::where('status_peminjaman', 'menunggu_pengembalian')
             ->OrderBy('tanggal_kembali_rencana', 'asc')
             ->paginate(10);
 
@@ -29,15 +29,15 @@ class PengembalianController extends Controller
     {
         $peminjaman = Peminjaman::FindOrFail($id);
 
-        if ($peminjaman->status_peminjaman !== 'disetujui') {
+        if ($peminjaman->status_peminjaman !== 'menunggu_pengembalian') {
             return redirect(route('petugas.pengembalian.index'))
-                ->with('error', 'Peminjaman ini tidak dalam status dipinjam.');
+                ->with('error', 'Peminjaman ini tidak dalam status menunggu pengembalian.');
         }
 
         return view('petugas.pengembalian.create', compact('peminjaman'));
     }
 
-    // Hitung hari telat & denda -- logic inti sesuai kesepakatan (Rp5.000/hari)
+    // Hitung hari telat & denda 
     private function hitungDenda(string $tanggalRencana, string $tanggalAktual): array
     {
         $rencana = strtotime($tanggalRencana);
@@ -61,9 +61,9 @@ class PengembalianController extends Controller
 
         $peminjaman = Peminjaman::FindOrFail($id);
 
-        if ($peminjaman->status_peminjaman !== 'disetujui') {
+        if ($peminjaman->status_peminjaman !== 'menunggu_pengembalian') {
             return redirect(route('petugas.pengembalian.index'))
-                ->with('error', 'Peminjaman ini tidak dalam status dipinjam.');
+                ->with('error', 'Peminjaman ini tidak dalam status menunggu pengembalian.');
         }
 
         [$hariTelat, $denda] = $this->hitungDenda(
@@ -98,4 +98,5 @@ class PengembalianController extends Controller
 
         return redirect(route('petugas.pengembalian.index'))->with('success', $pesan);
     }
+    
 }

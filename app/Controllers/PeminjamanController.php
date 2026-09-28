@@ -102,4 +102,55 @@ class PeminjamanController extends Controller
         return redirect(route('peminjam.alat.index'))
             ->with('success', 'Pengajuan berhasil dikirim, menunggu persetujuan Petugas.');
     }
+
+    public function sedangDipinjam(Request $request)
+{
+    $user = User::current();
+
+    // Alat yang sedang dipinjam
+    $dipinjam = Peminjaman::where('id_peminjam', $user->id)
+        ->where('status_peminjaman', 'disetujui')
+        ->OrderBy('tanggal_kembali_rencana', 'asc')
+        ->get();
+
+    // Alat yang sudah diajukan kembali, menunggu Petugas
+    $menunggu = Peminjaman::where('id_peminjam', $user->id)
+        ->where('status_peminjaman', 'menunggu_pengembalian')
+        ->OrderBy('tanggal_kembali_rencana', 'asc')
+        ->get();
+
+    return view('peminjam.dipinjam.index', compact('dipinjam', 'menunggu'));
+}
+public function ajukanPengembalian(Request $request, $id)
+{
+    $user = User::current();
+    $peminjaman = Peminjaman::FindOrFail($id);
+
+    if ((int) $peminjaman->id_peminjam !== (int) $user->id) {
+        return redirect(route('peminjam.dipinjam'))->with('error', 'Peminjaman ini bukan milik kamu.');
+    }
+
+    if ($peminjaman->status_peminjaman !== 'disetujui') {
+        return redirect(route('peminjam.dipinjam'))->with('error', 'Peminjaman ini tidak bisa diajukan pengembaliannya.');
+    }
+
+    $peminjaman->update(['status_peminjaman' => 'menunggu_pengembalian']);
+
+    LogAktivitas::catat($user->id, "Mengajukan pengembalian {$peminjaman->kode_peminjaman}");
+
+    return redirect(route('peminjam.dipinjam'))
+        ->with('success', 'Pengajuan pengembalian dikirim, menunggu verifikasi Petugas.');
+}
+
+// Peminjam: riwayat semua peminjamannya (termasuk denda final)
+public function riwayat(Request $request)
+{
+    $user = User::current();
+
+    $data = Peminjaman::where('id_peminjam', $user->id)
+        ->OrderBy('id_peminjaman', 'desc')
+        ->paginate(10);
+
+    return view('peminjam.riwayat.index', compact('data'));
+}
 }

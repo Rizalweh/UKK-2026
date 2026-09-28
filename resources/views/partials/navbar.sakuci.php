@@ -79,6 +79,12 @@ $canRegister = false;
                 <a class="nav-link {{ is_route('peminjam.alat.index') ? 'active' : '' }}" href="{{ route('peminjam.alat.index') }}">
                     <i class="bi bi-journal-text"></i><span>Pinjaman Saya</span>
                 </a>
+                <a class="nav-link {{ is_route('peminjam.riwayat') ? 'active' : '' }}" href="{{ route('peminjam.riwayat') }}">
+                    <i class="bi bi-clock-history"></i><span>Riwayat Peminjaman</span>
+                </a>
+                <a class="nav-link {{ is_route('peminjam.dipinjam') ? 'active' : '' }}" href="{{ route('peminjam.dipinjam') }}">
+                    <i class="bi bi-stopwatch"></i><span>Alat Sedang Dipinjam</span>
+                </a>
                 @endif
 
                 <!-- admin -->
