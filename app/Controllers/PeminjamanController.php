@@ -153,4 +153,22 @@ public function riwayat(Request $request)
 
     return view('peminjam.riwayat.index', compact('data'));
 }
+public function riwayatSemua(Request $request)
+{
+    $data = $request->all();
+    $status = $data['status'] ?? null;
+
+    $query = Peminjaman::OrderBy('id_peminjaman', 'desc');
+
+    if (!empty($status)) {
+        $query = $query->where('status_peminjaman', $status);
+    }
+
+    $riwayat = $query->paginate(15);
+
+    return view('petugas.peminjaman.riwayat.index', [
+        'data'         => $riwayat,
+        'statusFilter' => $status,
+    ]);
+}
 }

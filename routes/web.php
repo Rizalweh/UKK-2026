@@ -91,6 +91,7 @@ Route::group(['prefix' => 'petugas', 'middleware' => 'petugas'], function () {
     Route::get('/pengembalian', [PengembalianController::class, 'index'])->name('petugas.pengembalian.index');
     Route::get('/pengembalian/{id}/proses', [PengembalianController::class, 'create'])->name('petugas.pengembalian.create');
     Route::post('/pengembalian/{id}/proses', [PengembalianController::class, 'store'])->name('petugas.pengembalian.store');
+    Route::get('/peminjaman/riwayat', [PeminjamanController::class, 'riwayatSemua'])->name('petugas.peminjaman.riwayat');
 
 });
 

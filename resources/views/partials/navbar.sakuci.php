@@ -72,6 +72,11 @@ $canRegister = false;
                 <a class="nav-link {{ is_route('petugas.pengembalian.index') ? 'active' : '' }}" href="{{ route('petugas.pengembalian.index') }}">
                     <i class="bi bi-arrow-counterclockwise"></i><span>Pengembalian</span>
                 </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ is_route('petugas.peminjaman.riwayat') ? 'active' : '' }}" href="{{ route('petugas.peminjaman.riwayat') }}">
+                    <i class="bi bi-clock-history"></i><span>Riwayat Peminjaman</span>
+                </a>
                 @endif
 
                 <!--peminjam -->
