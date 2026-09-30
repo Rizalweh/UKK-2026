@@ -64,6 +64,8 @@ $canRegister = false;
             <!--petugas-->
             @if ($currentUser->role === 'petugas')
             <li class="nav-item">
+                <span class="small d-block text-body-secondary mb-1 px-3">Peminjaman & Pengembalian</span>
+            <li class="nav-item">
                 <a class="nav-link {{ is_route('petugas.peminjaman.index') ? 'active' : '' }}" href="{{ route('petugas.peminjaman.index') }}">
                     <i class="bi bi-journal-text"></i><span>Peminjaman</span>
                 </a>
@@ -81,6 +83,10 @@ $canRegister = false;
 
                 <!--peminjam -->
                 @if ($currentUser->role === 'peminjam')
+                <li class="nav-item">
+                    <hr>
+                    <span class="small d-block text-body-secondary mt-1 mb-1 px-4">Peminjaman</span>
+                </li>
                 <a class="nav-link {{ is_route('peminjam.alat.index') ? 'active' : '' }}" href="{{ route('peminjam.alat.index') }}">
                     <i class="bi bi-journal-text"></i><span>Pinjaman Saya</span>
                 </a>
@@ -94,6 +100,10 @@ $canRegister = false;
 
                 <!-- admin -->
                 @if ($currentUser->role === 'admin')
+                <li class="nav-item">
+                    <hr>
+                    <span class="small d-block text-body-secondary mt-1 mb-1 px-4">Manajemen Alat</span>
+                </li>
             <li class="nav-item">
                 <a class="nav-link {{ is_route('kategori.index') ? 'active' : '' }}" href="{{ route('kategori.index') }}">
                     <i class="bi bi-tags"></i><span>Kategori</span>
@@ -110,9 +120,12 @@ $canRegister = false;
                 <a class="nav-link {{ is_route('admin.log.index') ? 'active' : '' }}" href="{{ route('admin.log.index') }}">
                     <i class="bi bi-clock-history"></i><span>Log Aktivitas</span>
                 </a>
+            </li>
 
-                <hr class="my-2">
-
+                <li class="nav-item">
+                    <hr>
+                    <span class="small d-block text-body-secondary mt-1 mb-1 pl-6">Manajemen Pengguna</span>
+                </li>
             <li class="nav-item">
                 <a class="nav-link {{ is_route('admin.users.index') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">
                     <i class="bi bi-people"></i><span>Users</span>

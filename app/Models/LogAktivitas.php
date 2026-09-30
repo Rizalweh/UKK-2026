@@ -26,4 +26,5 @@ class LogAktivitas extends Model
             'waktu'     => date('Y-m-d H:i:s'),
         ]);
     }
+
 }
