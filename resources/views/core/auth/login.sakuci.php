@@ -10,8 +10,7 @@
                 <div class="card-body p-4">
                     <h1 class="h4 mb-1">Masuk</h1>
                     <p class="text-secondary small">Akun demo: admin &mdash; password <code class="inline">rahasia123</code></p>
-                    <p class="text-secondary small">Akun demo: peminjam &mdash; password <code class="inline">peminjam</code></p>
-                    <p class="text-secondary small mb-4">Akun demo: petugas1 &mdash; password <code class="inline">petugas1</code></p>
+            
 
                     <form method="POST" action="{{ route('login.attempt') }}">
                         @csrf
