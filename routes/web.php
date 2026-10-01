@@ -90,6 +90,9 @@ Route::group(['prefix' => 'petugas', 'middleware' => 'petugas'], function () {
     Route::put('/peminjaman/{id}/setujui', [PeminjamanController::class, 'setujui'])->name('petugas.peminjaman.setujui');
     Route::put('/peminjaman/{id}/tolak', [PeminjamanController::class, 'tolak'])->name('petugas.peminjaman.tolak');
 
+    Route::get('/peminjaman/riwayat', [PeminjamanController::class, 'riwayatSemua'])->name('petugas.peminjaman.riwayat.index');
+    Route::delete('/peminjaman/riwayat', [PeminjamanController::class, 'hapusRiwayatLama'])->name('petugas.peminjaman.riwayat.hapusRiwayatLama');
+
     Route::get('/pengembalian', [PengembalianController::class, 'index'])->name('petugas.pengembalian.index');
     Route::get('/pengembalian/{id}/proses', [PengembalianController::class, 'create'])->name('petugas.pengembalian.create');
     Route::post('/pengembalian/{id}/proses', [PengembalianController::class, 'store'])->name('petugas.pengembalian.store');

@@ -72,7 +72,6 @@ public function update(Request $request, User $user)
 
 public function destroy(User $user)
 {
-    // Jangan sampai admin hapus akunnya sendiri yang lagi dipakai login
     if ($user->id === User::current()->id) {
         return back()->with('error', 'Tidak bisa menghapus akun yang sedang login.');
     }
@@ -83,4 +82,3 @@ public function destroy(User $user)
     return back()->with('success', 'User "' . $username . '" berhasil dihapus.');
 }
 }
-

@@ -8,18 +8,31 @@ use App\Models\Peminjaman;
 use App\Models\Alat;
 use App\Models\User;
 use App\Models\LogAktivitas;
+use App\Models\Pengembalian;
 
 class PeminjamanController extends Controller
 {
     // Petugas: daftar pengajuan pending
     public function index(Request $request)
     {
+
         $data = Peminjaman::where('status_peminjaman', 'pending')
             ->OrderBy('tanggal_pengajuan', 'desc')
             ->paginate(10);
 
         return view('petugas.peminjaman.index', compact('data'));
     }
+
+    public function hapusRiwayatLama(Request $request)
+{
+    $batasLamaRiwayat= date('Y-m-d H:i:s', strtotime('-3 month'));
+    $jumlahLamaRiwayat = Pengembalian::where('created_at', '<', $batasLamaRiwayat)->count();
+    Peminjaman::where('created_at', '<', $batasLamaRiwayat)->delete();
+
+    return redirect(route('petugas.peminjaman.riwayat.index'))
+        ->with('success', $jumlahLamaRiwayat . ' riwayat lama berhasil dihapus');
+}
+
 
     // Petugas: setujui pengajuan -> stok dikurangi di sini
     public function setujui(Request $request, $id)
@@ -153,8 +166,11 @@ public function riwayat(Request $request)
 
     return view('peminjam.riwayat.index', compact('data'));
 }
+
 public function riwayatSemua(Request $request)
 {
+    $batasLamaRiwayat= date('Y-m-d H:i:s', strtotime('-3 month'));
+        $jumlahLamaRiwayat = Pengembalian::where('created_at', '<', $batasLamaRiwayat)->count();
     $data = $request->all();
     $status = $data['status'] ?? null;
 
@@ -169,6 +185,7 @@ public function riwayatSemua(Request $request)
     return view('petugas.peminjaman.riwayat.index', [
         'data'         => $riwayat,
         'statusFilter' => $status,
+        'jumlahLamaRiwayat' => $jumlahLamaRiwayat,
     ]);
 }
 }

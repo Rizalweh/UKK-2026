@@ -44,6 +44,8 @@
             @method('put')
             <button type="submit" class="btn btn-success btn-sm">Setujui</button>
         </form>
+    </td>
+    <td>
         <form action="{{ route('petugas.peminjaman.tolak', ['id' => $p->id_peminjaman]) }}" method="post" class="d-inline" onsubmit="return confirm('Tolak pengajuan ini?')">
             @csrf
             @method('put')

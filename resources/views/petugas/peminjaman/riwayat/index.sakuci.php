@@ -5,6 +5,11 @@
 @section('content')
 <h1>Riwayat Semua Peminjaman</h1>
 
+<div class="alert alert-info d-flex align-items-start gap-2 small" role="alert">
+        <i class="bi bi-info-circle-fill mt-1"></i>
+        <div>Log aktivitas akan dihapus apabila melebihi 90 hari</div>
+    </div>
+
 <form method="get" action="{{ route('petugas.peminjaman.riwayat') }}" class="row g-2 align-items-end mb-3">
     <div class="col-auto">
         <label for="status" class="form-label">Filter Status</label>
@@ -29,6 +34,19 @@
     ];
 @endphp
 
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-4">
+        @if ($jumlahLamaRiwayat > 0)
+        <div class="alert alert-info d-flex align-items-center justify-content-between">
+            <span> Ada {{ $jumlahLamaRiwayat }} riwayat peminjaman yang lebih lama dari 90 hari </span>
+            <form action="{{ route('petugas.peminjaman.riwayat.hapusRiwayatLama') }}" method="post" onsubmit="return confirm('Yakin ingin menghapus semua riwayat peminjaman?')">
+                @csrf
+                @method('delete')
+                <button type="submit" class="btn btn-sm btn-danger">Hapus Riwayat Lama</button>
+            </form>
+        </div>
+        @endif
+</div>
 <table class="table table-sm align-middle table-hover table-bordered table-striped">
 <tr>
     <th>No</th>
