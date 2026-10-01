@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\LogAktivitas;
 use App\Models\Pengembalian;
 
+
 class PeminjamanController extends Controller
 {
     // Petugas: daftar pengajuan pending
@@ -22,16 +23,6 @@ class PeminjamanController extends Controller
 
         return view('petugas.peminjaman.index', compact('data'));
     }
-
-    public function hapusRiwayatLama(Request $request)
-{
-    $batasLamaRiwayat= date('Y-m-d H:i:s', strtotime('-3 month'));
-    $jumlahLamaRiwayat = Pengembalian::where('created_at', '<', $batasLamaRiwayat)->count();
-    Peminjaman::where('created_at', '<', $batasLamaRiwayat)->delete();
-
-    return redirect(route('petugas.peminjaman.riwayat.index'))
-        ->with('success', $jumlahLamaRiwayat . ' riwayat lama berhasil dihapus');
-}
 
 
     // Petugas: setujui pengajuan -> stok dikurangi di sini
@@ -170,7 +161,7 @@ public function riwayat(Request $request)
 public function riwayatSemua(Request $request)
 {
     $batasLamaRiwayat= date('Y-m-d H:i:s', strtotime('-3 month'));
-        $jumlahLamaRiwayat = Pengembalian::where('created_at', '<', $batasLamaRiwayat)->count();
+        $jumlahLamaRiwayat = Peminjaman::where('created_at', '<', $batasLamaRiwayat)->count();
     $data = $request->all();
     $status = $data['status'] ?? null;
 
@@ -188,4 +179,22 @@ public function riwayatSemua(Request $request)
         'jumlahLamaRiwayat' => $jumlahLamaRiwayat,
     ]);
 }
+public function hapusRiwayatLama(Request $request)
+{
+    $batasLamaRiwayat = date('Y-m-d H:i:s', strtotime('-3 month'));
+    $jumlahLamaRiwayat = Peminjaman::where('created_at', '<', $batasLamaRiwayat)->count();
+
+    // 1.ambil id peminjaman
+    $ids = Peminjaman::where('created_at', '<', $batasLamaRiwayat)->pluck('id_peminjaman');
+
+    // 2.hapus id pengembalian
+    Pengembalian::whereIn('id_peminjaman', $ids)->delete();
+
+    // 3.hapus peminjamannya 
+    Peminjaman::where('created_at', '<', $batasLamaRiwayat)->delete();
+
+    return redirect(route('petugas.peminjaman.riwayat'))
+        ->with('success', $jumlahLamaRiwayat . ' riwayat lama berhasil dihapus');
+}
+
 }
