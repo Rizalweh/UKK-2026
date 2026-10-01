@@ -13,8 +13,8 @@ class UserController extends Controller
     public function index()
     {
         return view('core.admin.users.index', [
-            'users' => User::orderBy('username')->get(),
-            'roles' => Role::orderBy('name')->get(),
+           'users' => User::where('role', '!=', 'peminjam')->orderBy('username')->get(),
+           'roles' => Role::where('name', '!=', 'peminjam')->orderBy('name')->get(),
             'currentUser' => User::current()->id,
         ]);
     }

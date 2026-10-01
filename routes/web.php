@@ -13,6 +13,7 @@ use App\Controllers\PeminjamanController;
 use App\Controllers\WelcomeController;
 use App\Controllers\PengembalianController;
 use App\Controllers\LogAktivitasController;
+use App\Controllers\Core\PeminjamController as AdminPeminjamController;
 use Sakuci\Route;
 
 /*
@@ -82,7 +83,12 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::put('/alat/{id}', [AlatController::class, 'update'])->name('alat.update');
     Route::delete('/alat/{id}', [AlatController::class, 'destroy'])->name('alat.destroy');
     
-    
+    Route::get('/peminjam', [AdminPeminjamController::class, 'index'])->name('admin.peminjam.index');
+Route::get('/peminjam/create', [AdminPeminjamController::class, 'create'])->name('admin.peminjam.create');
+Route::post('/peminjam', [AdminPeminjamController::class, 'store'])->name('admin.peminjam.store');
+Route::get('/peminjam/{user}/edit', [AdminPeminjamController::class, 'edit'])->name('admin.peminjam.edit');
+Route::put('/peminjam/{user}', [AdminPeminjamController::class, 'update'])->name('admin.peminjam.update');
+Route::delete('/peminjam/{user}', [AdminPeminjamController::class, 'destroy'])->name('admin.peminjam.destroy');
 });
 
 Route::group(['prefix' => 'petugas', 'middleware' => 'petugas'], function () {

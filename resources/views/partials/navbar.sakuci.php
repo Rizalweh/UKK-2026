@@ -133,6 +133,12 @@ $canRegister = false;
             </li>
 
             <li class="nav-item">
+    <a class="nav-link {{ is_route('admin.peminjam.index') ? 'active' : '' }}" href="{{ route('admin.peminjam.index') }}">
+        <i class="bi bi-person-badge"></i><span>Peminjam</span>
+    </a>
+            </li>
+
+            <li class="nav-item">
                 <a class="nav-link {{ is_route('admin.roles.index') ? 'active' : '' }}" href="{{ route('admin.roles.index') }}">
                     <i class="bi bi-shield-lock"></i><span>Roles</span>
                 </a>

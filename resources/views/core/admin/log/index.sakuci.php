@@ -41,7 +41,7 @@
                     @forelse ($data as $log)
                     <tr>
                         <td>{{ $log->waktu }}</td>
-                        <td>{{ $log->user->username ?? '(user dihapus)' }}</td>
+                        <td>{{ $log->user->profil->nama_lengkap ?? $log->user->username ?? '(user dihapus)' }}</td>
                         <td>{{ $log->aktivitas }}</td>
                         <td>
                     <form action="{{ route('admin.log.destroy', ['id' => $log->id_log]) }}" method="post">
