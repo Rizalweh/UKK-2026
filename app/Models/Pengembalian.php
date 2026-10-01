@@ -9,10 +9,11 @@ class Pengembalian extends Model
     protected static ?string $table = 'pengembalian';
     protected string $primaryKey = 'id_pengembalian';
 
-    protected array $fillable = [
-        'id_peminjaman', 'id_petugas', 'tanggal_kembali_aktual',
-        'kondisi_alat', 'hari_telat', 'denda', 'catatan',
-    ];
+   protected array $fillable = [
+    'id_peminjaman', 'id_petugas', 'tanggal_kembali_aktual',
+    'kondisi_alat', 'hari_telat', 'denda_telat', 'denda_kerusakan', 'denda',
+    'status_denda', 'tanggal_bayar', 'id_penerima_bayar', 'catatan',
+];
 
     public function peminjaman()
     {

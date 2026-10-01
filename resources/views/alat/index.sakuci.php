@@ -31,6 +31,7 @@
                         <td>{{ $alat->kategori->nama_kategori ?? '-' }}</td>
                         <td>{{ $alat->kode_alat }}</td>
                         <td>{{ $alat->nama_alat }}</td>
+                        <td>{{ $alat->harga_alat }}</td>
                         <td>{{ $alat->stok}}</td>
                         <td>{{ $alat->kondisi}}</td>
                         <td><img src="/uploads/foto_alat/{{ $alat->foto_alat }}" alt="Foto Alat" width="100"></td>

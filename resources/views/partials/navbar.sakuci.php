@@ -76,6 +76,10 @@ $canRegister = false;
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link {{ is_route('petugas.denda.index') ? 'active' : '' }}" href="{{ route('petugas.denda.index') }}">
+                    <i class="bi bi-cash-stack"></i><span>Denda Peminjam</span>
+                </a>
+            <li class="nav-item">
                 <a class="nav-link {{ is_route('petugas.peminjaman.riwayat') ? 'active' : '' }}" href="{{ route('petugas.peminjaman.riwayat') }}">
                     <i class="bi bi-clock-history"></i><span>Riwayat Peminjaman</span>
                 </a>
