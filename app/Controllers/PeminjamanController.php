@@ -196,5 +196,22 @@ public function hapusRiwayatLama(Request $request)
     return redirect(route('petugas.peminjaman.riwayat'))
         ->with('success', $jumlahLamaRiwayat . ' riwayat lama berhasil dihapus');
 }
+// Peminjam: rincian denda miliknya
+public function denda(Request $request)
+{
+    $user = User::current();
 
+    $data = Pengembalian::select('pengembalian.*')
+        ->leftJoin('peminjaman', 'peminjaman.id_peminjaman', '=', 'pengembalian.id_peminjaman')
+        ->where('peminjaman.id_peminjam', $user->id)
+        ->where('pengembalian.denda', '>', 0)
+        ->with(['peminjaman.alat'])
+        ->OrderBy('pengembalian.id_pengembalian', 'desc')
+        ->paginate(10);
+
+    return view('peminjam.denda.index', [
+        'data'      => $data,
+        'tunggakan' => Pengembalian::tunggakan($user->id),
+    ]);
+}
 }

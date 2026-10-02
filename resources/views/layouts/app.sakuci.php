@@ -28,6 +28,7 @@
 <div class="app-content d-flex flex-column min-vh-100">
     <main class="container-fluid px-3 px-lg-4 flex-grow-1 py-4">
         @include('partials.flash')
+        @include('partials.banner-denda')
 
         @yield('content')
     </main>

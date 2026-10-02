@@ -100,6 +100,10 @@ $canRegister = false;
                 <a class="nav-link {{ is_route('peminjam.dipinjam') ? 'active' : '' }}" href="{{ route('peminjam.dipinjam') }}">
                     <i class="bi bi-stopwatch"></i><span>Alat Sedang Dipinjam</span>
                 </a>
+                <li class="nav-item">
+                    <a class="nav-link {{ is_route('peminjam.denda') ? 'active' : '' }}" href="{{ route('peminjam.denda') }}">
+                        <i class="bi bi-cash-stack"></i><span>Denda Saya</span>
+                    </a>
                 @endif
 
                 <!-- admin -->

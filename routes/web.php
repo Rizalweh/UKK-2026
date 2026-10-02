@@ -84,11 +84,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::delete('/alat/{id}', [AlatController::class, 'destroy'])->name('alat.destroy');
     
     Route::get('/peminjam', [AdminPeminjamController::class, 'index'])->name('admin.peminjam.index');
-Route::get('/peminjam/create', [AdminPeminjamController::class, 'create'])->name('admin.peminjam.create');
-Route::post('/peminjam', [AdminPeminjamController::class, 'store'])->name('admin.peminjam.store');
-Route::get('/peminjam/{user}/edit', [AdminPeminjamController::class, 'edit'])->name('admin.peminjam.edit');
-Route::put('/peminjam/{user}', [AdminPeminjamController::class, 'update'])->name('admin.peminjam.update');
-Route::delete('/peminjam/{user}', [AdminPeminjamController::class, 'destroy'])->name('admin.peminjam.destroy');
+    Route::get('/peminjam/create', [AdminPeminjamController::class, 'create'])->name('admin.peminjam.create');
+    Route::post('/peminjam', [AdminPeminjamController::class, 'store'])->name('admin.peminjam.store');
+    Route::get('/peminjam/{user}/edit', [AdminPeminjamController::class, 'edit'])->name('admin.peminjam.edit');
+    Route::put('/peminjam/{user}', [AdminPeminjamController::class, 'update'])->name('admin.peminjam.update');
+    Route::delete('/peminjam/{user}', [AdminPeminjamController::class, 'destroy'])->name('admin.peminjam.destroy');
 });
 
 Route::group(['prefix' => 'petugas', 'middleware' => 'petugas'], function () {
@@ -105,7 +105,7 @@ Route::group(['prefix' => 'petugas', 'middleware' => 'petugas'], function () {
     Route::get('/peminjaman/riwayat', [PeminjamanController::class, 'riwayatSemua'])->name('petugas.peminjaman.riwayat');
 
     Route::get('/denda', [PengembalianController::class, 'denda'])->name('petugas.denda.index');
-Route::put('/denda/{id}/bayar', [PengembalianController::class, 'bayar'])->name('petugas.denda.bayar');
+    Route::put('/denda/{id}/bayar', [PengembalianController::class, 'bayar'])->name('petugas.denda.bayar');
 
 });
 
@@ -117,6 +117,8 @@ Route::group(['prefix' => 'peminjam', 'middleware' => 'peminjam'], function () {
     Route::put('/peminjaman/{id}/kembali', [PeminjamanController::class, 'ajukanPengembalian'])->name('peminjam.kembali');
     Route::get('/peminjaman/riwayat', [PeminjamanController::class, 'riwayat'])->name('peminjam.riwayat');
     Route::get('/peminjaman/dipinjam', [PeminjamanController::class, 'sedangDipinjam'])->name('peminjam.dipinjam');
+
+    Route::get('/denda', [PeminjamanController::class, 'denda'])->name('peminjam.denda');
 });
     
 

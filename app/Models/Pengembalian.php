@@ -24,4 +24,24 @@ class Pengembalian extends Model
     {
         return $this->belongsTo(User::class, 'id_petugas', 'id');
     }
+
+    public static function tunggakan(int $userId): array
+{
+    $ids = Peminjaman::where('id_peminjam', $userId)->pluck('id_peminjaman');
+
+    if ($ids === []) {
+        return ['total' => 0, 'jumlah' => 0];
+    }
+
+    $list = static::where('status_denda', 'belum_lunas')
+        ->whereIn('id_peminjaman', $ids)
+        ->get();
+
+    $total = 0;
+    foreach ($list as $p) {
+        $total += $p->denda;
+    }
+
+    return ['total' => $total, 'jumlah' => count($list)];
+}
 }
