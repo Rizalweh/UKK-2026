@@ -14,6 +14,8 @@ use App\Controllers\WelcomeController;
 use App\Controllers\PengembalianController;
 use App\Controllers\LogAktivitasController;
 use App\Controllers\Core\PeminjamController as AdminPeminjamController;
+use App\Controllers\Core\AdminPeminjamanController;
+use App\Controllers\Core\AdminPengembalianController;
 use Sakuci\Route;
 
 /*
@@ -89,6 +91,21 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/peminjam/{user}/edit', [AdminPeminjamController::class, 'edit'])->name('admin.peminjam.edit');
     Route::put('/peminjam/{user}', [AdminPeminjamController::class, 'update'])->name('admin.peminjam.update');
     Route::delete('/peminjam/{user}', [AdminPeminjamController::class, 'destroy'])->name('admin.peminjam.destroy');
+
+    Route::get('/peminjaman', [AdminPeminjamanController::class, 'index'])->name('admin.peminjaman.index');
+    Route::get('/peminjaman/create', [AdminPeminjamanController::class, 'create'])->name('admin.peminjaman.create');
+    Route::post('/peminjaman', [AdminPeminjamanController::class, 'store'])->name('admin.peminjaman.store');
+    Route::get('/peminjaman/{id}/edit', [AdminPeminjamanController::class, 'edit'])->name('admin.peminjaman.edit');
+    Route::put('/peminjaman/{id}', [AdminPeminjamanController::class, 'update'])->name('admin.peminjaman.update');
+    Route::put('/peminjaman/{id}/batalkan', [AdminPeminjamanController::class, 'batalkan'])->name('admin.peminjaman.batalkan');
+    Route::delete('/peminjaman/{id}', [AdminPeminjamanController::class, 'destroy'])->name('admin.peminjaman.destroy');
+
+    Route::get('/pengembalian', [AdminPengembalianController::class, 'index'])->name('admin.pengembalian.index');
+    Route::get('/pengembalian/create', [AdminPengembalianController::class, 'create'])->name('admin.pengembalian.create');
+    Route::post('/pengembalian', [AdminPengembalianController::class, 'store'])->name('admin.pengembalian.store');
+    Route::get('/pengembalian/{id}/edit', [AdminPengembalianController::class, 'edit'])->name('admin.pengembalian.edit');
+    Route::put('/pengembalian/{id}', [AdminPengembalianController::class, 'update'])->name('admin.pengembalian.update');
+    Route::delete('/pengembalian/{id}', [AdminPengembalianController::class, 'destroy'])->name('admin.pengembalian.destroy');
 });
 
 Route::group(['prefix' => 'petugas', 'middleware' => 'petugas'], function () {

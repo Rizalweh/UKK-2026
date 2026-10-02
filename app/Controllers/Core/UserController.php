@@ -7,7 +7,7 @@ use App\Models\User;
 use Sakuci\Controller;
 use Sakuci\Http\Request;
 
-/** Halaman admin untuk menambah user dan menentukan role-nya. */
+/* Halaman admin untuk nambah user dan menentukan role-nya. */
 class UserController extends Controller
 {
     public function index()

@@ -53,8 +53,8 @@
 </div>
 
 <div class="mb-3">
-    <label class="form-label" for="nik">NIS</label>
-    <input type="text" id="nik" name="nik" value="{{ old('nis') }}" class="form-control">
+    <label class="form-label" for="nis">NIS</label>
+    <input type="text" id="nis" name="nis" value="{{ old('nis') }}" class="form-control">
 </div>
 
 <div class="mb-3">

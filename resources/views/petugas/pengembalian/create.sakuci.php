@@ -25,6 +25,7 @@
             <option value="baik">Baik</option>
             <option value="rusak_ringan">Rusak Ringan</option>
             <option value="rusak_berat">Rusak Berat</option>
+            <option value="hilang">Hilang</option>
         </select>
     </div>
 

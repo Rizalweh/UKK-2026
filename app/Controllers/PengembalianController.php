@@ -13,13 +13,12 @@ use Sakuci\Database\Connection;
 
 class PengembalianController extends Controller
 {
-    const TARIF_DENDA_PER_HARI = 5000;
-
-    // Petugas: daftar peminjaman yang sedang dipinjam (siap dikembalikan)
+    // Petugas: memantau peminjaman yang menunggu verifikasi pengembalian
     public function index(Request $request)
     {
         $data = Peminjaman::where('status_peminjaman', 'menunggu_pengembalian')
             ->OrderBy('tanggal_kembali_rencana', 'asc')
+            ->with(['peminjam', 'alat'])
             ->paginate(10);
 
         return view('petugas.pengembalian.index', compact('data'));
@@ -38,116 +37,101 @@ class PengembalianController extends Controller
         return view('petugas.pengembalian.create', compact('peminjaman'));
     }
 
-    // Hitung hari telat & denda 
-    private function hitungDenda(string $tanggalRencana, string $tanggalAktual): array
+    // Petugas: simpan hasil pengembalian (rumus denda ada di Pengembalian::hitung)
+    public function store(Request $request, $id)
     {
-        $rencana = strtotime($tanggalRencana);
-        $aktual  = strtotime($tanggalAktual);
-
-        $hariTelat = 0;
-        if ($aktual > $rencana) {
-            $hariTelat = (int) round(($aktual - $rencana) / 86400);
-        }
-
-        $denda = $hariTelat * self::TARIF_DENDA_PER_HARI;
-
-        return [$hariTelat, $denda];
-    }
-
-    // Petugas: simpan hasil pengembalian
-const PERSEN_KERUSAKAN = [
-    'baik' => 0, 'rusak_ringan' => 0.25, 'rusak_berat' => 0.5, 'hilang' => 1.0,
-];
-
-public function store(Request $request, $id)
-{
-    $data = $request->validate([
-        'tanggal_kembali_aktual' => 'required|date',
-        'kondisi_alat'           => 'required|in:baik,rusak_ringan,rusak_berat,hilang',
-        'catatan'                => 'nullable|string|max:500',
-    ]);
-
-    $petugas    = User::current();
-    $peminjaman = Peminjaman::FindOrFail($id);
-
-    if ($peminjaman->status_peminjaman !== 'menunggu_pengembalian') {
-        return redirect(route('petugas.pengembalian.index'))
-            ->with('error', 'Peminjaman ini tidak dalam status menunggu pengembalian.');
-    }
-
-    $alat = Alat::FindOrFail($peminjaman->id_alat);
-    $kondisi = $data['kondisi_alat'];
-
-    [$hariTelat, $dendaTelat] = $this->hitungDenda(
-        $peminjaman->tanggal_kembali_rencana, $data['tanggal_kembali_aktual']
-    );
-
-    $dendaKerusakan = (int) round(
-        $alat->harga_alat * $peminjaman->jumlah_pinjam * self::PERSEN_KERUSAKAN[$kondisi]
-    );
-    $total = $dendaTelat + $dendaKerusakan;
-
-    Connection::transaction(function () use ($data, $peminjaman, $alat, $petugas, $kondisi, $hariTelat, $dendaTelat, $dendaKerusakan, $total) {
-        Pengembalian::create([
-            'id_peminjaman'          => $peminjaman->id_peminjaman,
-            'id_petugas'             => $petugas->id,
-            'tanggal_kembali_aktual' => $data['tanggal_kembali_aktual'],
-            'kondisi_alat'           => $kondisi,
-            'hari_telat'             => $hariTelat,
-            'denda_telat'            => $dendaTelat,
-            'denda_kerusakan'        => $dendaKerusakan,
-            'denda'                  => $total,
-            'status_denda'           => $total > 0 ? 'belum_lunas' : 'tidak_ada',
-            'catatan'                => $data['catatan'] ?? null,
+        $data = $request->validate([
+            'tanggal_kembali_aktual' => 'required|date',
+            'kondisi_alat'           => 'required|in:baik,rusak_ringan,rusak_berat,hilang',
+            'catatan'                => 'nullable|string|max:500',
         ]);
-           $peminjaman->update(['status_peminjaman' => 'dikembalikan']);
 
-        // Alat rusak berat / hilang tidak masuk stok lagi
-        if (in_array($kondisi, ['baik', 'rusak_ringan'], true)) {
-            $alat->update(['stok' => $alat->stok + $peminjaman->jumlah_pinjam]);
+        $petugas    = User::current();
+        $peminjaman = Peminjaman::FindOrFail($id);
+
+        if ($peminjaman->status_peminjaman !== 'menunggu_pengembalian') {
+            return redirect(route('petugas.pengembalian.index'))
+                ->with('error', 'Peminjaman ini tidak dalam status menunggu pengembalian.');
         }
-    });
 
-    LogAktivitas::catat($petugas->id,
-        "Memproses pengembalian {$peminjaman->kode_peminjaman} (kondisi: {$kondisi}), total denda Rp" . number_format($total, 0, ',', '.'));
+        if (strtotime($data['tanggal_kembali_aktual']) < strtotime($peminjaman->tanggal_pinjam)) {
+            return back()->with('error', 'Tanggal kembali tidak boleh sebelum tanggal pinjam.')->withInput();
+        }
 
-    $pesan = $total > 0
-        ? 'Pengembalian diproses. Total denda Rp' . number_format($total, 0, ',', '.') . ' (belum lunas).'
-        : 'Pengembalian diproses tanpa denda.';
+        $alat    = Alat::FindOrFail($peminjaman->id_alat);
+        $kondisi = $data['kondisi_alat'];
 
-    return redirect(route('petugas.pengembalian.index'))->with('success', $pesan);
-}
-// Daftar denda yang belum dibayar
-public function denda(Request $request)
-{
-    $data = Pengembalian::where('status_denda', 'belum_lunas')
-        ->with(['peminjaman.peminjam', 'peminjaman.alat'])
-        ->OrderBy('id_pengembalian', 'desc')
-        ->paginate(10);
+        $h = Pengembalian::hitung(
+            $peminjaman->tanggal_kembali_rencana,
+            $data['tanggal_kembali_aktual'],
+            $kondisi,
+            (float) $alat->harga_alat,
+            (int) $peminjaman->jumlah_pinjam
+        );
 
-    return view('petugas.pengembalian.denda', compact('data'));
-}
+        Connection::transaction(function () use ($data, $peminjaman, $alat, $petugas, $kondisi, $h) {
+            Pengembalian::create([
+                'id_peminjaman'          => $peminjaman->id_peminjaman,
+                'id_petugas'             => $petugas->id,
+                'tanggal_kembali_aktual' => $data['tanggal_kembali_aktual'],
+                'kondisi_alat'           => $kondisi,
+                'hari_telat'             => $h['hari_telat'],
+                'denda_telat'            => $h['denda_telat'],
+                'denda_kerusakan'        => $h['denda_kerusakan'],
+                'denda'                  => $h['total'],
+                'status_denda'           => $h['total'] > 0 ? 'belum_lunas' : 'tidak_ada',
+                'catatan'                => $data['catatan'] ?? null,
+            ]);
 
-// Tandai lunas
-public function bayar(Request $request, $id)
-{
-    $pengembalian = Pengembalian::FindOrFail($id);
+            $peminjaman->update(['status_peminjaman' => 'dikembalikan']);
 
-    if ($pengembalian->status_denda !== 'belum_lunas') {
-        return back()->with('error', 'Denda ini sudah lunas atau tidak ada denda.');
+            // Alat rusak berat / hilang tidak masuk stok lagi
+            if (Pengembalian::masukStok($kondisi)) {
+                Alat::ubahStok((int) $alat->id_alat, (int) $peminjaman->jumlah_pinjam);
+            }
+        });
+
+        LogAktivitas::catat($petugas->id,
+            "Memproses pengembalian {$peminjaman->kode_peminjaman} (kondisi: {$kondisi}), total denda Rp" . number_format($h['total'], 0, ',', '.'));
+
+        $pesan = $h['total'] > 0
+            ? 'Pengembalian diproses. Total denda Rp' . number_format($h['total'], 0, ',', '.') . ' (belum lunas).'
+            : 'Pengembalian diproses tanpa denda.';
+
+        return redirect(route('petugas.pengembalian.index'))->with('success', $pesan);
     }
 
-    $petugas = User::current();
+    // Daftar denda yang belum dibayar
+    public function denda(Request $request)
+    {
+        $data = Pengembalian::where('status_denda', 'belum_lunas')
+            ->with(['peminjaman.peminjam', 'peminjaman.alat'])
+            ->OrderBy('id_pengembalian', 'desc')
+            ->paginate(10);
 
-    $pengembalian->update([
-        'status_denda'      => 'lunas',
-        'tanggal_bayar'     => date('Y-m-d H:i:s'),
-        'id_penerima_bayar' => $petugas->id,
-    ]);
+        return view('petugas.pengembalian.denda', compact('data'));
+    }
 
-    LogAktivitas::catat($petugas->id,
-        "Menerima pembayaran denda Rp" . number_format($pengembalian->denda, 0, ',', '.') . " (pengembalian ID {$pengembalian->id_pengembalian})");
+    // Tandai lunas
+    public function bayar(Request $request, $id)
+    {
+        $pengembalian = Pengembalian::FindOrFail($id);
 
-    return back()->with('success', 'Pembayaran denda dicatat sebagai lunas.');
-}
+        if ($pengembalian->status_denda !== 'belum_lunas') {
+            return back()->with('error', 'Denda ini sudah lunas atau tidak ada denda.');
+        }
+
+        $petugas = User::current();
+
+        $pengembalian->update([
+            'status_denda'      => 'lunas',
+            'tanggal_bayar'     => date('Y-m-d H:i:s'),
+            'id_penerima_bayar' => $petugas->id,
+        ]);
+
+        LogAktivitas::catat($petugas->id,
+            "Menerima pembayaran denda Rp" . number_format($pengembalian->denda, 0, ',', '.') . " (pengembalian ID {$pengembalian->id_pengembalian})");
+
+        return back()->with('success', 'Pembayaran denda dicatat sebagai lunas.');
+    }
 }

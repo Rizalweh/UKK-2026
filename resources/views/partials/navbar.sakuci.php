@@ -138,7 +138,20 @@ $canRegister = false;
                     <i class="bi bi-clock-history"></i><span>Log Aktivitas</span>
                 </a>
             </li>
-
+            <li class="nav-item">
+                    <hr>
+                    <span class="small d-block text-body-secondary mt-1 mb-1 px-4">Transaksi</span>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ is_route('admin.peminjaman.index', 'admin.peminjaman.create', 'admin.peminjaman.edit') ? 'active' : '' }}" href="{{ route('admin.peminjaman.index') }}">
+                    <i class="bi bi-journal-text"></i><span>Data Peminjaman</span>
+                </a>
+            </li>
+             <li class="nav-item">
+                <a class="nav-link {{ is_route('admin.pengembalian.index', 'admin.pengembalian.create', 'admin.pengembalian.edit') ? 'active' : '' }}" href="{{ route('admin.pengembalian.index') }}">
+            <i class="bi bi-arrow-counterclockwise"></i><span>Data Pengembalian</span>
+                 </a>
+            </li>
                 <li class="nav-item">
                     <hr>
                     <span class="small d-block text-body-secondary mt-1 mb-1 pl-6">Manajemen Pengguna</span>
