@@ -17,6 +17,7 @@
                         <th>Kategori</th>
                         <th>Kode</th>
                         <th>Nama Alat</th>
+                        <th>Harga</th>
                         <th>Stok</th>
                         <th>Kondisi</th>
                         <th>Foto</th>
