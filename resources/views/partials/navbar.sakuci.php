@@ -83,6 +83,15 @@ $canRegister = false;
                 <a class="nav-link {{ is_route('petugas.peminjaman.riwayat') ? 'active' : '' }}" href="{{ route('petugas.peminjaman.riwayat') }}">
                     <i class="bi bi-clock-history"></i><span>Riwayat Peminjaman</span>
                 </a>
+            </li>
+             <li class="nav-item">
+                <span class="small d-block text-body-secondary mb-1 px-3">Cetak</span>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ is_route('petugas.laporan.index') ? 'active' : '' }}" href="{{ route('petugas.laporan.index') }}">
+                    <i class="bi bi-printer"></i><span>Cetak Laporan</span>
+                </a>
+            </li>
                 @endif
 
                 <!--peminjam -->

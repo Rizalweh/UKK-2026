@@ -214,4 +214,36 @@ public function denda(Request $request)
         'tunggakan' => Pengembalian::tunggakan($user->id),
     ]);
 }
+ // Petugas: laporan peminjaman & pengembalian (siap cetak)
+public function laporan(Request $request)
+{
+    $dari   = $request->input('dari');
+    $sampai = $request->input('sampai');
+    $status = $request->input('status');
+
+    $query = Peminjaman::OrderBy('tanggal_pinjam', 'desc');
+
+    if (!empty($dari))   { $query = $query->where('tanggal_pinjam', '>=', $dari); }
+    if (!empty($sampai)) { $query = $query->where('tanggal_pinjam', '<=', $sampai); }
+    if (!empty($status)) { $query = $query->where('status_peminjaman', $status); }
+
+    // with() = eager loading, hindari N+1; limit supaya halaman tetap cepat
+    $data = $query->with(['peminjam', 'alat', 'pengembalian'])->limit(500)->get();
+
+    $totalDenda = 0;
+    foreach ($data as $p) {
+        $totalDenda += $p->pengembalian->denda ?? 0;
+    }
+
+    LogAktivitas::catat(User::current()->id, 'Membuka laporan peminjaman');
+
+    return view('petugas.laporan.index', [
+        'data'       => $data,
+        'totalDenda' => $totalDenda,
+        'dari'       => $dari,
+        'sampai'     => $sampai,
+        'statusFilter' => $status,
+        'petugas'    => User::current(),
+    ]);
+}
 }

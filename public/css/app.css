@@ -256,3 +256,13 @@ code.inline {
     color: #a5b4fc;
 }
 
+/* cetak laporan dan sembunyikan sidebar & elemen nonlaporan */
+@media print {
+    .sidebar, .app-topbar, .no-print, footer, .alert, .pagination {
+        display: none !important;
+    }
+    .app-content { margin-left: 0 !important; }
+    body { background: #fff !important; font-size: 12px; }
+    table { font-size: 11px; }
+}
+

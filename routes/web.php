@@ -107,6 +107,8 @@ Route::group(['prefix' => 'petugas', 'middleware' => 'petugas'], function () {
     Route::get('/denda', [PengembalianController::class, 'denda'])->name('petugas.denda.index');
     Route::put('/denda/{id}/bayar', [PengembalianController::class, 'bayar'])->name('petugas.denda.bayar');
 
+    Route::get('/laporan', [PeminjamanController::class, 'laporan'])->name('petugas.laporan.index');
+
 });
 
 Route::group(['prefix' => 'peminjam', 'middleware' => 'peminjam'], function () {
@@ -119,6 +121,7 @@ Route::group(['prefix' => 'peminjam', 'middleware' => 'peminjam'], function () {
     Route::get('/peminjaman/dipinjam', [PeminjamanController::class, 'sedangDipinjam'])->name('peminjam.dipinjam');
 
     Route::get('/denda', [PeminjamanController::class, 'denda'])->name('peminjam.denda');
+
 });
     
 
