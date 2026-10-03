@@ -13,14 +13,14 @@
     </div>
     <div class="alert alert-info d-flex align-items-start gap-2 small" role="alert">
         <i class="bi bi-info-circle-fill mt-1"></i>
-        <div>Log aktivitas akan dihapus apabila melebihi 90 hari</div>
+       <div>Log aktivitas dibersihkan saat mencapai 500 baris. Yang tersisa 250 log terbaru.</div>
     </div>
 
     <div class="card border-0 shadow-sm">
         <div class="card-body p-4">
             @if ($jumlahLama > 0)
             <div class="alert alert-info d-flex align-items-center justify-content-between">
-                <span> Ada {{ $jumlahLama }} log yang lebih lama dari 90 hari </span>
+                <span>Log sudah mencapai batas. {{ $jumlahLama }} log terlama bisa dibersihkan.</span>
                 <form action="{{ route('admin.log.hapusLama') }}" method="post" onsubmit="return confirm('ingin dibersihkan?')">
                     @csrf
                     @method('DELETE')
