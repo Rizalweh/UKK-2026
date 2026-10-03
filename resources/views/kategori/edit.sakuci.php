@@ -1,21 +1,28 @@
 @extends('layouts.app')
 
-@section('title', config('app.name') . ' -- Kerangka PHP Ringan')
+@section('title', config('app.name') . ' -- Edit Kategori')
 
 @section('content')
-<form action="{{ route('kategori.update', ['id' => $data->id_kategori]) }}" method="post" class="d-flex flex-column form-horizontal">
+@include('partials.page-head', ['judul' => 'Edit Kategori', 'kembali' => route('kategori.index')])
+
+<form action="{{ route('kategori.update', ['id' => $data->id_kategori]) }}" method="post" class="form-card">
     @csrf
     @method('PUT')
-
-    <label>Nama Kategori</label>
-    <input type="text" name="nama_kategori" value="{{ $data->nama_kategori }}" class="form-control" required>
-
-    <label>Kode Kategori</label>    
-    <input type="text" name="kode_kategori" value="{{ $data->kode_kategori }}" class="form-control" required>
-
-    <label>Keterangan</label>    
-    <input type="text" name="keterangan" value="{{ $data->keterangan }}" class="form-control mb-3" required>
-
-    <button type="submit" class="btn btn-primary">Simpan</button>
+    <div class="mb-3">
+        <label class="form-label" for="nama_kategori">Nama Kategori</label>
+        <input type="text" id="nama_kategori" name="nama_kategori" class="form-control" value="{{ old('nama_kategori', $data->nama_kategori) }}" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label" for="kode_kategori">Kode Kategori</label>
+        <input type="text" id="kode_kategori" name="kode_kategori" class="form-control" maxlength="10" value="{{ old('kode_kategori', $data->kode_kategori) }}" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label" for="keterangan">Keterangan</label>
+        <textarea id="keterangan" name="keterangan" rows="3" class="form-control">{{ old('keterangan', $data->keterangan) }}</textarea>
+    </div>
+    <div class="form-actions">
+        <button type="submit" class="btn btn-brand">Simpan</button>
+        <a href="{{ route('kategori.index') }}" class="btn btn-outline-secondary">Batal</a>
+    </div>
 </form>
 @endsection

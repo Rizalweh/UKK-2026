@@ -1,7 +1,7 @@
 /*
 | Tema SARPRAS TECH. Dimuat SETELAH app.css dan sidebar.css.
 | Siang  = PaperFlow (krem, oranye, Inter, radius kecil)
-| Malam  = Aura (ungu gelap, Plus Jakarta Sans, radius besar)
+| Malam  = Lumora Studio (abu gelap, biru, Inter, radius 8px)
 | Semua mengikuti atribut [data-bs-theme] yang sudah ada.
 */
 
@@ -35,31 +35,31 @@
 }
 
 [data-bs-theme="dark"] {
-    --brand: #5B1E91;
-    --brand-dark: #6E2BAA;
-    --brand-subtle: rgba(189, 181, 233, .14);
-    --brand-text: #BDB5E9;
-    --peach: #BDB5E9;
-    --glow: rgba(91, 30, 145, .55);
+    --brand: #2789D8;
+    --brand-dark: #1F76BD;
+    --brand-subtle: rgba(80, 176, 255, .14);
+    --brand-text: #50B0FF;
+    --peach: #50B0FF;
+    --glow: rgba(39, 137, 216, .5);
 
-    --bs-body-bg: #150B24;
-    --bs-tertiary-bg: #150B24;
-    --bs-secondary-bg: #1F1233;
-    --bs-body-color: #EDE9F7;
-    --bs-secondary-color: rgba(237, 233, 247, .66);
-    --bs-border-color: #3A2A55;
-    --bs-link-color: #BDB5E9;
-    --bs-link-hover-color: #FFFFFF;
-    --bs-danger: #EB0000;
-    --bs-danger-rgb: 235, 0, 0;
+    --bs-body-bg: #1C1C1D;
+    --bs-tertiary-bg: #1C1C1D;
+    --bs-secondary-bg: #242426;
+    --bs-body-color: #FFFFFF;
+    --bs-secondary-color: #A1A1AA;
+    --bs-border-color: #2A2A2B;
+    --bs-link-color: #50B0FF;
+    --bs-link-hover-color: #BFEAFF;
+    --bs-danger: #F2564E;
+    --bs-danger-rgb: 242, 86, 78;
 
-    --bs-body-font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-    --bs-card-bg: #1F1233;
-    --bs-card-border-radius: 32px;
-    --bs-border-radius: 24px;
-    --bs-border-radius-lg: 32px;
-    --bs-card-box-shadow: 0 1px 0 rgba(255, 255, 255, .05) inset, 0 20px 50px -28px rgba(0, 0, 0, .8);
-    --tw-headline: linear-gradient(180deg, #FFFFFF 20%, #A99FD0 100%);
+    --bs-body-font-family: 'Inter', system-ui, sans-serif;
+    --bs-card-bg: #242426;
+    --bs-card-border-radius: 8px;
+    --bs-border-radius: 8px;
+    --bs-border-radius-lg: 8px;
+    --bs-card-box-shadow: 0 1px 0 rgba(255, 255, 255, .06) inset, 0 20px 50px -28px rgba(0, 0, 0, .85);
+    --tw-headline: linear-gradient(180deg, #FFFFFF 30%, #A1A1AA 100%);
 }
 
 body {
@@ -74,9 +74,8 @@ body {
 
 .btn { --bs-btn-border-radius: var(--bs-border-radius); font-weight: 600; }
 .form-control, .form-select { border-radius: var(--bs-border-radius); }
-[data-bs-theme="dark"] .btn { --bs-btn-border-radius: 9999px; }
 [data-bs-theme="dark"] .form-control,
-[data-bs-theme="dark"] .form-select { background-color: #1A0E2C; border-color: #3A2A55; }
+[data-bs-theme="dark"] .form-select { background-color: #1C1C1D; border-color: #2A2A2B; }
 
 code.inline, .font-mono, .step-number { font-family: 'JetBrains Mono', ui-monospace, monospace; }
 
@@ -102,7 +101,7 @@ code.inline, .font-mono, .step-number { font-family: 'JetBrains Mono', ui-monosp
     color: #fff !important;
     box-shadow: 0 6px 18px -8px var(--brand);
 }
-[data-bs-theme="dark"] .sidebar-menu .nav-link.active { background-color: #BDB5E9 !important; border-color: #BDB5E9 !important; color: #1B0F2E !important; }
+[data-bs-theme="dark"] .sidebar-menu .nav-link.active { background-color: #2789D8 !important; border-color: #2789D8 !important; color: #fff !important; }
 .navbar-nav .nav-link.active, .navbar-nav .nav-link:hover { color: var(--brand-text); }
 
 .pagination { --bs-pagination-active-bg: var(--brand); --bs-pagination-active-border-color: var(--brand); --bs-pagination-color: var(--brand-text); }
@@ -111,3 +110,36 @@ code.inline, .font-mono, .step-number { font-family: 'JetBrains Mono', ui-monosp
     body { background: #fff !important; }
     .card { box-shadow: none !important; }
 }
+
+/* ===== Pola halaman daftar & form (dipakai di semua halaman CRUD) ===== */
+
+.tone-muted  { --tc: var(--bs-secondary-color); --tb: rgba(127, 127, 127, .14); }
+.tone-warn   { --tc: var(--brand-text); --tb: var(--brand-subtle); }
+.tone-danger { --tc: var(--bs-danger); --tb: rgba(var(--bs-danger-rgb), .12); }
+.tone-ok     { --tc: #1F9D55; --tb: rgba(31, 157, 85, .13); }
+.tone-info   { --tc: #1D4ED8; --tb: rgba(37, 99, 235, .12); }
+[data-bs-theme="dark"] .tone-info { --tc: #50B0FF; --tb: rgba(80, 176, 255, .14); }
+.pill { display: inline-block; padding: .2rem .7rem; border-radius: 9999px; background: var(--tb); color: var(--tc); font-size: .76rem; font-weight: 600; white-space: nowrap; }
+
+.pg-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.pg-head h1 { font-size: 1.5rem; font-weight: 600; letter-spacing: -.025em; margin: 0; }
+
+.tbl-card, .form-card { border-radius: var(--bs-card-border-radius); background: var(--bs-card-bg); border: 1px solid var(--bs-border-color); box-shadow: var(--bs-card-box-shadow); }
+.tbl-card { overflow: hidden; }
+.tbl-card .table { margin: 0; }
+.tbl-card .table > :not(caption) > * > * { padding: .8rem 1rem; background-color: transparent; box-shadow: none; }
+.tbl-card .table thead th { border-bottom: 1px solid var(--bs-border-color); white-space: nowrap; }
+.tbl-card .table tbody tr:last-child > * { border-bottom: 0; }
+.tbl-card .table-hover > tbody > tr:hover > * { background-color: rgba(127, 127, 127, .06); }
+.tbl-card .empty { padding: 2.5rem 1rem; text-align: center; color: var(--bs-secondary-color); }
+.tbl-card .sub { display: block; font-size: .8rem; color: var(--bs-secondary-color); }
+.tbl-card .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: .82rem; }
+.pager { margin-top: 1rem; }
+.thumb { width: 52px; height: 52px; object-fit: cover; border-radius: 10px; background: var(--brand-subtle); display: inline-grid; place-items: center; color: var(--brand-text); vertical-align: middle; }
+
+.form-card { max-width: 680px; padding: 1.75rem; }
+.form-card .form-label { font-size: .88rem; font-weight: 500; margin-bottom: .35rem; }
+.form-actions { display: flex; gap: .6rem; margin-top: 1.5rem; }
+.info-list { display: grid; grid-template-columns: auto 1fr; gap: .35rem 1.25rem; margin: 0 0 1.5rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--bs-border-color); font-size: .93rem; }
+.info-list dt { font-weight: 500; color: var(--bs-secondary-color); }
+.info-list dd { margin: 0; }
