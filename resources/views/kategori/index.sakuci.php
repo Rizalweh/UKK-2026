@@ -1,36 +1,45 @@
 @extends('layouts.app')
 
-@section('title', config('app.name') . ' -- Kerangka PHP Ringan')
+@section('title', config('app.name') . ' -- Kategori')
 
 @section('content')
-<h1>Daftar Kategori</h1>
-<table class = "table table-sm align-middle table-hover table-bordered table-striped"> 
-<tr>
-    <th>No</th>
-    <th>nama kategori</th>
-    <th>kode kategori</th>
-    <th>Keterangan</th>
-    <th>Aksi</th>
-</tr>
-@php $no = 1; @endphp
-@foreach ($data as $kategoris)
-<tr>
-    <td class="text-center"> {{ $no++ }} </td>
-    <td> {{ $kategoris->nama_kategori }} </td>
-    <td> {{ $kategoris->kode_kategori }} </td>
-    <td> {{ $kategoris->keterangan }} </td>
-    <td>
-         <a href="{{ route('kategori.edit', ['id' => $kategoris->id_kategori]) }}" class="btn btn-primary btn-sm">Edit</a>
-         <form action="{{ route('kategori.destroy', ['id' => $kategoris->id_kategori]) }}" method="post" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus data?')" >
-            @csrf
-            @method('delete')
-            <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
-    </td>
-</tr>
-@endforeach
-</table>
-<div class="mt-5 mb-3 me-2 d-flex justify-content-end">
-<a href="{{ route('kategori.create') }}" class="btn btn-success">Tambah Kategori</a>
+@include('partials.page-head', ['judul' => 'Kategori Alat', 'aksi' => ['Tambah Kategori', route('kategori.create')]])
+
+<div class="tbl-card table-responsive">
+    <table class="table table-hover align-middle">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Nama</th>
+                <th>Kode</th>
+                <th>Keterangan</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            @php $no = 1; @endphp
+            @forelse ($data as $k)
+            <tr>
+                <td>{{ $no++ }}</td>
+                <td class="fw-medium">{{ $k->nama_kategori }}</td>
+                <td class="mono">{{ $k->kode_kategori }}</td>
+                <td class="text-secondary">{{ $k->keterangan ?: '-' }}</td>
+                <td>
+                    <div class="d-flex gap-1">
+                        <a href="{{ route('kategori.edit', ['id' => $k->id_kategori]) }}" class="btn btn-sm btn-outline-brand">Edit</a>
+                        <form action="{{ route('kategori.destroy', ['id' => $k->id_kategori]) }}" method="post" onsubmit="return confirm('Hapus kategori ini?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Hapus</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            @empty
+            <tr><td colspan="5" class="empty">Belum ada kategori.</td></tr>
+            @endforelse
+        </tbody>
+    </table>
 </div>
-{!! $data->links() !!}
+<div class="pager">{!! $data->links() !!}</div>
 @endsection

@@ -44,6 +44,7 @@
     $faq = [
         ['Bagaimana cara mendaftar?', 'Pilih Daftar akun, lalu isi username, password, nama lengkap, NIS, dan nomor HP. Kalau pendaftaran belum dibuka, minta admin membuatkan akunmu.'],
         ['Kapan stok alat berkurang?', 'Stok baru berkurang setelah petugas menyetujui pengajuan. Selama masih berstatus pending, stok belum berubah.'],
+        ['Di mana alat diambil?', 'Di Ruang TU, setelah pengajuanmu disetujui petugas.'],
         ['Bisakah tanggal kembali diperpanjang?', 'Bisa, selama peminjaman berstatus disetujui. Minta admin memperpanjang tanggal kembali, karena peminjam tidak bisa mengubahnya sendiri.'],
         ['Berapa denda kalau terlambat?', 'Rp' . $tarif . ' untuk setiap hari setelah tanggal rencana kembali.'],
         ['Bagaimana kalau alat rusak atau hilang?', 'Dendanya persentase dari harga alat dikali jumlah yang dipinjam: rusak ringan ' . $pct('rusak_ringan') . ', rusak berat ' . $pct('rusak_berat') . ', hilang ' . $pct('hilang') . '. Denda kerusakan dihitung terpisah dari denda telat.'],
@@ -64,13 +65,13 @@
         max-width: 1120px; margin: 0 auto; color: var(--ink);
     }
     [data-bs-theme="dark"] .lp {
-        --ink: #F1ECFB; --dim: rgba(241, 236, 251, .7); --faint: rgba(241, 236, 251, .46);
-        --panel: #1C1030; --card: #26173F; --line: rgba(189, 181, 233, .15);
-        --acc: #BDB5E9; --acct: #BDB5E9; --soft: rgba(189, 181, 233, .14);
-        --dark: #0E0618; --dark2: #1C1030; --btn: #BDB5E9; --btn-ink: #1B0F2E;
-        --b1: rgba(91, 30, 145, .7); --b2: rgba(189, 181, 233, .22);
-        --shadow: 0 1px 0 rgba(255, 255, 255, .05) inset, 0 20px 50px -28px rgba(0, 0, 0, .8);
-        --r: 32px; --rs: 24px;
+        --ink: #FFFFFF; --dim: #A1A1AA; --faint: #71717A;
+        --panel: #232325; --card: #2A2A2C; --line: rgba(255, 255, 255, .09);
+        --acc: #50B0FF; --acct: #50B0FF; --soft: rgba(80, 176, 255, .14);
+        --dark: #000000; --dark2: #141415; --btn: #FFFFFF; --btn-ink: #0B0B0C;
+        --b1: rgba(39, 137, 216, .6); --b2: rgba(80, 176, 255, .2);
+        --shadow: 0 1px 0 rgba(255, 255, 255, .06) inset, 0 20px 50px -28px rgba(0, 0, 0, .85);
+        --r: 24px; --rs: 8px;
     }
     .lp h1, .lp h2, .lp h3 { letter-spacing: -.035em; color: var(--ink); }
     .lp .serif { font-family: 'Instrument Serif', Georgia, serif; font-style: italic; font-weight: 400; letter-spacing: -.01em; }
@@ -228,18 +229,18 @@
         </nav>
     </div>
 
-    {{--HERO--}}
+    {{-- ================= HERO ================= --}}
     <header class="lp-hero">
         <span class="lp-blob a"></span><span class="lp-blob b"></span>
         <span class="lp-tile t1"><i class="bi bi-box-seam"></i></span>
         <span class="lp-tile t2"><i class="bi bi-clipboard-check"></i></span>
         <span class="lp-tile t3"><i class="bi bi-tools"></i></span>
 
-        <span class="lp-badge"><i class="bi bi-lightning-charge"></i> Peminjaman sarana dan prasarana sekolah</span>
+        <span class="lp-badge"><i class="bi bi-lightning-charge"></i> Oxford International College &middot; Peminjaman sarana dan prasarana</span>
 
         <h1 class="lp-h1">
             @if ($currentUser) Halo, {{ $currentUser->username }}.<br> @endif
-            Peminjaman alat sekolah <span class="serif">Sarpras Tech</span>
+            Pinjam alat sekolah <span class="serif">tanpa antre</span>
         </h1>
         <p class="lp-sub">Cek stok, ajukan peminjaman, dan pantau pengembalian serta denda dari satu halaman.</p>
 
@@ -343,7 +344,7 @@
                     <p>Pengajuan yang ditolak berhenti di status Ditolak dan tidak mengurangi stok.</p>
                     <ol class="lp-flow">
                         <li><b>Pending</b>Pengajuan dikirim, menunggu petugas.</li>
-                        <li><b>Disetujui</b>Alat dipinjam dan stok berkurang.</li>
+                        <li><b>Disetujui</b>Ambil alat di Ruang TU. Stok berkurang.</li>
                         <li><b>Menunggu pengembalian</b>Peminjam sudah mengajukan kembali.</li>
                         <li><b>Dikembalikan</b>Petugas mencatat tanggal dan kondisi.</li>
                     </ol>
@@ -381,7 +382,7 @@
             @foreach ($peran as $key => $p)
             <article class="lp-role {{ $key === $aktif ? 'on' : '' }}">
                 <span class="ic"><i class="bi {{ $p[1] }}"></i></span>
-                <h3>{{ $p[0] }} @if ($currentUser && $key === $aktif)<span class="you">Anda</span>@endif</h3>
+                <h3>{{ $p[0] }} @if ($currentUser && $key === $aktif)<span class="you">Peranmu</span>@endif</h3>
                 <p>{{ $p[2] }}</p>
                 <ul>
                     @foreach ($p[3] as $item)

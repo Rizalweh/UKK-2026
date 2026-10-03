@@ -1,21 +1,27 @@
 @extends('layouts.app')
 
-@section('title', config('app.name') . ' -- Kerangka PHP Ringan')
+@section('title', config('app.name') . ' -- Tambah Kategori')
 
 @section('content')
-<h1>Tambah Kategori</h1>
-<form action="{{ route('kategori.store') }}" method="post" class="d-flex flex-column form-horizontal">
+@include('partials.page-head', ['judul' => 'Tambah Kategori', 'kembali' => route('kategori.index')])
+
+<form action="{{ route('kategori.store') }}" method="post" class="form-card">
     @csrf
-
-    <label>Nama Kategori</label>
-    <input type="text" name="nama_kategori" id="nama_kategori" class="form-control" value="{{ old('nama_kategori') }}" required>
-
-    <label>Kode Kategori</label>    
-    <input type="text" name="kode_kategori" id="kode_kategori" class="form-control" value="{{ old('kode_kategori') }}" required>
-
-    <label>Keterangan</label>    
-    <input type="text" name="keterangan" id="keterangan" class="form-control mb-3" value="{{ old('keterangan') }}" required>
-
-    <button type="submit" class="btn btn-primary">Simpan</button>
+    <div class="mb-3">
+        <label class="form-label" for="nama_kategori">Nama Kategori</label>
+        <input type="text" id="nama_kategori" name="nama_kategori" class="form-control" value="{{ old('nama_kategori') }}" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label" for="kode_kategori">Kode Kategori</label>
+        <input type="text" id="kode_kategori" name="kode_kategori" class="form-control" maxlength="10" value="{{ old('kode_kategori') }}" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label" for="keterangan">Keterangan</label>
+        <textarea id="keterangan" name="keterangan" rows="3" class="form-control">{{ old('keterangan') }}</textarea>
+    </div>
+    <div class="form-actions">
+        <button type="submit" class="btn btn-brand">Simpan</button>
+        <a href="{{ route('kategori.index') }}" class="btn btn-outline-secondary">Batal</a>
+    </div>
 </form>
 @endsection

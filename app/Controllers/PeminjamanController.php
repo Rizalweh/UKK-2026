@@ -9,6 +9,8 @@ use App\Models\Alat;
 use App\Models\User;
 use App\Models\LogAktivitas;
 use App\Models\Pengembalian;
+use Sakuci\Database\Connection;
+
 
 
 class PeminjamanController extends Controller
@@ -160,8 +162,8 @@ public function riwayat(Request $request)
 
 public function riwayatSemua(Request $request)
 {
-    $batasLamaRiwayat= date('Y-m-d H:i:s', strtotime('-3 month'));
-        $jumlahLamaRiwayat = Peminjaman::where('created_at', '<', $batasLamaRiwayat)->count();
+    $jumlahSelesai = count($this->idSelesai());
+    $jumlahLamaRiwayat = $jumlahSelesai >= self::BATAS_RIWAYAT ? $jumlahSelesai - self::SISA_RIWAYAT : 0;
     $data = $request->all();
     $status = $data['status'] ?? null;
 
@@ -181,20 +183,22 @@ public function riwayatSemua(Request $request)
 }
 public function hapusRiwayatLama(Request $request)
 {
-    $batasLamaRiwayat = date('Y-m-d H:i:s', strtotime('-3 month'));
-    $jumlahLamaRiwayat = Peminjaman::where('created_at', '<', $batasLamaRiwayat)->count();
+    $ids = $this->idSelesai();
 
-    // 1.ambil id peminjaman
-    $ids = Peminjaman::where('created_at', '<', $batasLamaRiwayat)->pluck('id_peminjaman');
+    if (count($ids) < self::BATAS_RIWAYAT) {
+        return redirect(route('petugas.peminjaman.riwayat'))
+            ->with('error', 'Riwayat selesai belum mencapai ' . self::BATAS_RIWAYAT . ' baris.');
+    }
 
-    // 2.hapus id pengembalian
-    Pengembalian::whereIn('id_peminjaman', $ids)->delete();
+    $hapus = array_slice($ids, self::SISA_RIWAYAT);
 
-    // 3.hapus peminjamannya 
-    Peminjaman::where('created_at', '<', $batasLamaRiwayat)->delete();
+    Connection::transaction(function () use ($hapus) {
+        Pengembalian::whereIn('id_peminjaman', $hapus)->delete();
+        Peminjaman::whereIn('id_peminjaman', $hapus)->delete();
+    });
 
     return redirect(route('petugas.peminjaman.riwayat'))
-        ->with('success', $jumlahLamaRiwayat . ' riwayat lama berhasil dihapus');
+        ->with('success', count($hapus) . ' riwayat selesai berhasil dihapus');
 }
 // Peminjam: rincian denda miliknya
 public function denda(Request $request)
@@ -246,4 +250,21 @@ public function laporan(Request $request)
         'petugas'    => User::current(),
     ]);
 }
+
+private const BATAS_RIWAYAT = 500;
+private const SISA_RIWAYAT  = 250;
+
+private function idSelesai(): array
+{
+    $rows = Connection::select(
+        "SELECT p.id_peminjaman FROM peminjaman p
+         WHERE p.status_peminjaman = 'ditolak'
+            OR (p.status_peminjaman = 'dikembalikan' AND NOT EXISTS (
+                SELECT 1 FROM pengembalian g
+                WHERE g.id_peminjaman = p.id_peminjaman AND g.status_denda = 'belum_lunas'))
+         ORDER BY p.id_peminjaman DESC"
+    );
+    return array_column($rows, 'id_peminjaman');
+}
+
 }
