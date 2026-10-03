@@ -1,0 +1,113 @@
+/*
+| Tema SARPRAS TECH. Dimuat SETELAH app.css dan sidebar.css.
+| Siang  = PaperFlow (krem, oranye, Inter, radius kecil)
+| Malam  = Aura (ungu gelap, Plus Jakarta Sans, radius besar)
+| Semua mengikuti atribut [data-bs-theme] yang sudah ada.
+*/
+
+:root,
+[data-bs-theme="light"] {
+    --brand: #E65C00;
+    --brand-dark: #C24E00;
+    --brand-subtle: #FFE9D6;
+    --brand-text: #B94A00;
+    --peach: #FFB380;
+    --glow: rgba(255, 179, 128, .45);
+
+    --bs-body-bg: #FDFBF7;
+    --bs-tertiary-bg: #FDFBF7;
+    --bs-secondary-bg: #F7F4EB;
+    --bs-body-color: #111827;
+    --bs-secondary-color: #4B5563;
+    --bs-border-color: #E5E7EB;
+    --bs-link-color: #B94A00;
+    --bs-link-hover-color: #E65C00;
+    --bs-danger: #D92D20;
+    --bs-danger-rgb: 217, 45, 32;
+
+    --bs-body-font-family: 'Inter', system-ui, sans-serif;
+    --bs-card-bg: #F7F4EB;
+    --bs-card-border-radius: 16px;
+    --bs-border-radius: 8px;
+    --bs-border-radius-lg: 16px;
+    --bs-card-box-shadow: 0 1px 0 rgba(255, 255, 255, .8) inset, 0 12px 28px -18px rgba(17, 24, 39, .25);
+    --tw-headline: linear-gradient(180deg, #111827 30%, #6B4A2E 100%);
+}
+
+[data-bs-theme="dark"] {
+    --brand: #5B1E91;
+    --brand-dark: #6E2BAA;
+    --brand-subtle: rgba(189, 181, 233, .14);
+    --brand-text: #BDB5E9;
+    --peach: #BDB5E9;
+    --glow: rgba(91, 30, 145, .55);
+
+    --bs-body-bg: #150B24;
+    --bs-tertiary-bg: #150B24;
+    --bs-secondary-bg: #1F1233;
+    --bs-body-color: #EDE9F7;
+    --bs-secondary-color: rgba(237, 233, 247, .66);
+    --bs-border-color: #3A2A55;
+    --bs-link-color: #BDB5E9;
+    --bs-link-hover-color: #FFFFFF;
+    --bs-danger: #EB0000;
+    --bs-danger-rgb: 235, 0, 0;
+
+    --bs-body-font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --bs-card-bg: #1F1233;
+    --bs-card-border-radius: 32px;
+    --bs-border-radius: 24px;
+    --bs-border-radius-lg: 32px;
+    --bs-card-box-shadow: 0 1px 0 rgba(255, 255, 255, .05) inset, 0 20px 50px -28px rgba(0, 0, 0, .8);
+    --tw-headline: linear-gradient(180deg, #FFFFFF 20%, #A99FD0 100%);
+}
+
+body {
+    font-family: var(--bs-body-font-family);
+    background: var(--bs-body-bg) !important;
+}
+
+.card {
+    box-shadow: var(--bs-card-box-shadow);
+    border: 1px solid var(--bs-border-color) !important;
+}
+
+.btn { --bs-btn-border-radius: var(--bs-border-radius); font-weight: 600; }
+.form-control, .form-select { border-radius: var(--bs-border-radius); }
+[data-bs-theme="dark"] .btn { --bs-btn-border-radius: 9999px; }
+[data-bs-theme="dark"] .form-control,
+[data-bs-theme="dark"] .form-select { background-color: #1A0E2C; border-color: #3A2A55; }
+
+code.inline, .font-mono, .step-number { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+/* Tombol & lencana utama */
+.btn-brand { background: var(--brand); border-color: var(--brand); color: #fff; }
+.btn-brand:hover, .btn-brand:focus, .btn-brand:active { background: var(--brand-dark); border-color: var(--brand-dark); color: #fff; }
+.btn-outline-brand { border-color: var(--brand-text); color: var(--brand-text); }
+.btn-outline-brand:hover { background: var(--brand); border-color: var(--brand); color: #fff; }
+.text-brand { color: var(--brand-text) !important; }
+.badge-brand { background: var(--brand-subtle) !important; color: var(--brand-text) !important; }
+
+/* Tabel */
+.table { --bs-table-bg: transparent; --bs-table-striped-bg: rgba(127, 127, 127, .06); }
+.table > :not(caption) > * > * { border-color: var(--bs-border-color); }
+.table th { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: .75rem; font-weight: 600; color: var(--bs-secondary-color); }
+
+/* Sidebar */
+.sidebar-menu .nav-link:hover:not(.active) { background-color: var(--brand-subtle); }
+.sidebar-menu .nav-link.active,
+[data-bs-theme="dark"] .sidebar-menu .nav-link.active {
+    background-color: var(--brand) !important;
+    border-color: var(--brand) !important;
+    color: #fff !important;
+    box-shadow: 0 6px 18px -8px var(--brand);
+}
+[data-bs-theme="dark"] .sidebar-menu .nav-link.active { background-color: #BDB5E9 !important; border-color: #BDB5E9 !important; color: #1B0F2E !important; }
+.navbar-nav .nav-link.active, .navbar-nav .nav-link:hover { color: var(--brand-text); }
+
+.pagination { --bs-pagination-active-bg: var(--brand); --bs-pagination-active-border-color: var(--brand); --bs-pagination-color: var(--brand-text); }
+
+@media print {
+    body { background: #fff !important; }
+    .card { box-shadow: none !important; }
+}

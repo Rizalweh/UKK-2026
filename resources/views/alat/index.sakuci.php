@@ -1,4 +1,3 @@
-@extends('layouts.app-daisy-v2')
 @extends('layouts.app')
 @section('content')
 
