@@ -26,6 +26,7 @@
 
 <link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">
 <link rel="stylesheet" href="{{ asset('css/theme.css') }}">
+<link rel="stylesheet" href="{{ asset('css/peminjaman.css') }}">
     
 </head>
 <body class="bg-body-tertiary">

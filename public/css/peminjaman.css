@@ -1,0 +1,258 @@
+/*
+| Halaman peminjaman sisi peminjam (katalog + halaman pinjam).
+| Dimuat SETELAH theme.css.
+|
+| Warna, radius kartu, bayangan, dan font TIDAK ditulis ulang di sini:
+| semuanya dibaca dari variabel theme.css (--brand, --glow, --bs-card-*, dst),
+| jadi perbedaan siang (PaperFlow) dan malam (Lumora) otomatis mengikuti
+| atribut [data-bs-theme]. Yang didefinisikan di bawah hanya token tambahan
+| untuk gerak dan jarak.
+*/
+
+:root {
+    --radius-pill: 9999px;
+    --teks-di-atas-brand: #fff;
+
+    --durasi-gerak: .22s;
+    --angkat-hover: -4px;
+    --jarak-muncul: 14px;
+    --jeda-urutan: 55ms;
+
+    --padding-kartu: 1.5rem;
+    --jarak-sticky: 90px;
+    --lebar-kartu-min: 240px;
+    --ukuran-glow: 520px;
+    --kaca-opasitas: 82%;
+}
+
+/* ===== Latar halaman: blob lembut dari --glow (hangat di siang, biru di malam) ===== */
+
+.latar-peminjam {
+    position: relative;
+    isolation: isolate;
+    overflow-x: clip;
+}
+
+.latar-peminjam::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: calc(var(--ukuran-glow) * -.35);
+    right: calc(var(--ukuran-glow) * -.27);
+    width: var(--ukuran-glow);
+    height: var(--ukuran-glow);
+    background: radial-gradient(circle, var(--glow), transparent 68%);
+    filter: blur(50px);
+    pointer-events: none;
+}
+
+.latar-peminjam .pg-head h1 {
+    background: var(--tw-headline);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* ===== Katalog: pencarian, filter, grid ===== */
+
+.katalog-cari { max-width: 520px; margin-bottom: 1rem; }
+
+.filter-kategori { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.75rem; }
+
+.filter-pill {
+    padding: .4rem 1rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--bs-border-color);
+    background: var(--bs-card-bg);
+    color: var(--bs-secondary-color);
+    font-size: .88rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: border-color var(--durasi-gerak) ease, color var(--durasi-gerak) ease;
+}
+.filter-pill:hover { border-color: var(--brand-text); color: var(--brand-text); }
+.filter-pill.aktif { background: var(--brand); border-color: var(--brand); color: var(--teks-di-atas-brand); }
+
+.katalog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(var(--lebar-kartu-min), 1fr));
+    gap: 1.1rem;
+}
+
+.katalog-kosong { padding: 3rem 1rem; text-align: center; color: var(--bs-secondary-color); }
+.katalog-kosong h2 { font-size: 1.15rem; font-weight: 600; color: var(--bs-body-color); }
+
+/* ===== Kartu alat ===== */
+
+.kartu-alat {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: var(--bs-card-border-radius);
+    background: var(--bs-card-bg);
+    border: 1px solid var(--bs-border-color);
+    box-shadow: var(--bs-card-box-shadow);
+    color: var(--bs-body-color);
+    text-decoration: none;
+    transition: transform var(--durasi-gerak) ease, border-color var(--durasi-gerak) ease;
+}
+.kartu-alat:hover { transform: translateY(var(--angkat-hover)); border-color: var(--brand-text); color: var(--bs-body-color); }
+
+.kartu-alat-foto {
+    position: relative;
+    display: grid;
+    place-items: center;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: var(--brand-subtle);
+    color: var(--brand-text);
+    font-size: 2.2rem;
+}
+.kartu-alat-foto img { width: 100%; height: 100%; object-fit: cover; }
+
+.kartu-alat-isi { display: flex; flex-direction: column; gap: .4rem; flex: 1; padding: 1rem 1.15rem 1.15rem; }
+.kartu-alat-nama { margin: .2rem 0 0; font-size: 1.1rem; font-weight: 600; letter-spacing: -.02em; }
+.kartu-alat-kode { font-size: .78rem; color: var(--bs-secondary-color); }
+.kartu-alat-meta { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: auto; padding-top: .8rem; border-top: 1px dashed var(--bs-border-color); }
+.kartu-alat-aksi { font-size: .85rem; font-weight: 600; color: var(--brand-text); }
+
+.kartu-alat-habis { opacity: .6; }
+.kartu-alat-habis .kartu-alat-foto img { filter: grayscale(1); }
+.kartu-alat-label-habis {
+    position: absolute;
+    top: .75rem;
+    left: .75rem;
+    padding: .2rem .7rem;
+    border-radius: var(--radius-pill);
+    background: var(--bs-body-bg);
+    color: var(--bs-danger);
+    font-size: .76rem;
+    font-weight: 600;
+}
+
+/* Satu-satunya animasi muncul: kartu katalog saat halaman dimuat, bertahap.
+   fill-mode "backwards" supaya transform hover tidak tertimpa setelah selesai. */
+.muncul {
+    animation: muncul-naik .45s ease backwards;
+    animation-delay: calc(var(--urutan, 0) * var(--jeda-urutan));
+}
+@keyframes muncul-naik {
+    from { opacity: 0; transform: translateY(var(--jarak-muncul)); }
+    to   { opacity: 1; transform: none; }
+}
+
+/* ===== Halaman pinjam ===== */
+
+.pinjam-kartu {
+    padding: var(--padding-kartu);
+    border-radius: var(--bs-card-border-radius);
+    background: var(--bs-card-bg);
+    border: 1px solid var(--bs-border-color);
+    box-shadow: var(--bs-card-box-shadow);
+}
+
+/* Malam (Lumora): panel kaca. Siang tetap kertas krem dari --bs-card-bg. */
+[data-bs-theme="dark"] .pinjam-kartu {
+    background: color-mix(in srgb, var(--bs-card-bg) var(--kaca-opasitas), transparent);
+    backdrop-filter: blur(14px);
+}
+
+.pinjam-form-judul { margin: 0 0 1.25rem; font-size: 1.15rem; font-weight: 600; letter-spacing: -.02em; }
+
+.pinjam-foto {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 4 / 3;
+    margin-bottom: 1rem;
+    overflow: hidden;
+    border-radius: var(--bs-border-radius);
+    background: var(--brand-subtle);
+    color: var(--brand-text);
+    font-size: 2.6rem;
+}
+.pinjam-foto img { width: 100%; height: 100%; object-fit: cover; }
+
+.pinjam-nama-alat { margin: .6rem 0 .1rem; font-size: 1.4rem; font-weight: 600; letter-spacing: -.03em; }
+.pinjam-kode { display: block; font-size: .8rem; color: var(--bs-secondary-color); }
+.pinjam-info-pill { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .8rem; }
+
+.pinjam-ringkasan-daftar { margin: 1.1rem 0 0; }
+.pinjam-ringkasan-daftar > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: .6rem 0;
+    border-top: 1px dashed var(--bs-border-color);
+}
+.pinjam-ringkasan-daftar dt { font-weight: 500; color: var(--bs-secondary-color); }
+.pinjam-ringkasan-daftar dd { margin: 0; font-weight: 600; }
+
+.pinjam-form .form-label { font-size: .88rem; font-weight: 500; margin-bottom: .35rem; }
+.pinjam-form .form-actions { margin-top: 1.75rem; }
+.pinjam-form .form-actions .btn { border-radius: var(--radius-pill); padding: .7rem 1.6rem; }
+
+/* Stepper jumlah */
+.stepper {
+    display: inline-flex;
+    align-items: stretch;
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+    overflow: hidden;
+    background: var(--bs-body-bg);
+}
+.stepper-tombol {
+    width: 2.6rem;
+    border: 0;
+    background: transparent;
+    color: var(--bs-body-color);
+    transition: background-color var(--durasi-gerak) ease;
+}
+.stepper-tombol:hover { background: var(--brand-subtle); color: var(--brand-text); }
+.stepper-input {
+    width: 4rem;
+    border: 0;
+    border-inline: 1px solid var(--bs-border-color);
+    background: transparent;
+    color: var(--bs-body-color);
+    text-align: center;
+    font-weight: 600;
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+.stepper-input::-webkit-outer-spin-button,
+.stepper-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.stepper-input:focus { outline: none; }
+
+/* Stok habis */
+.pinjam-habis { text-align: center; padding-block: 3rem; }
+.pinjam-habis i { font-size: 2.2rem; color: var(--bs-secondary-color); }
+.pinjam-habis h2 { margin: .75rem 0 .35rem; font-size: 1.25rem; font-weight: 600; }
+.pinjam-habis p { max-width: 28rem; margin: 0 auto 1.25rem; color: var(--bs-secondary-color); }
+
+/* Aturan denda: sengaja paling redup supaya tidak bersaing dengan tombol utama */
+.pinjam-aturan {
+    margin-top: 1.25rem;
+    padding: 1.1rem 1.25rem;
+    border: 1px dashed var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+    color: var(--bs-secondary-color);
+    font-size: .88rem;
+}
+.pinjam-aturan h3 { margin: 0 0 .5rem; font-size: .95rem; font-weight: 600; color: var(--bs-body-color); }
+.pinjam-aturan ul { margin: 0; padding-left: 1.1rem; display: grid; gap: .3rem; }
+
+/* ===== Umum ===== */
+
+.kartu-alat:focus-visible,
+.filter-pill:focus-visible,
+.stepper-tombol:focus-visible { outline: 2px solid var(--brand-text); outline-offset: 3px; }
+
+@media (min-width: 992px) {
+    .pinjam-ringkasan { position: sticky; top: var(--jarak-sticky); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .muncul { animation: none; }
+    .kartu-alat, .filter-pill, .stepper-tombol { transition: none; }
+    .kartu-alat:hover { transform: none; }
+}

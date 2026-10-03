@@ -1,60 +1,64 @@
 @extends('layouts.app')
 
-@section('title', config('app.name') . ' -- Daftar Alat')
+@section('title', config('app.name') . ' -- Katalog Alat')
 
 @section('content')
-<h1>Daftar Alat Tersedia</h1>
+@php
+    $adaFilter = $kataKunci !== '' || $kategoriDipilih !== '';
 
-@foreach ($data as $item)
-<form id="form-ajukan-{{ $item->id_alat }}" action="{{ route('peminjam.peminjaman.ajukan') }}" method="post" class="d-none">
-    @csrf
-    <input type="hidden" name="id_alat" value="{{ $item->id_alat }}">
-</form>
-@endforeach
+    // URL katalog dengan pencarian dipertahankan, kategori diganti sesuai pill yang diklik
+    $urlKatalog = function ($idKategori = null) use ($kataKunci) {
+        $parameterQuery = array_filter(
+            ['q' => $kataKunci, 'kategori' => $idKategori],
+            fn ($nilai) => $nilai !== null && $nilai !== ''
+        );
 
-<table class="table table-sm align-middle table-hover table-bordered table-striped">
-    <tr>
-        <th>No</th>
-        <th>Nama Alat</th>
-        <th>Kategori</th>
-        <th>Stok</th>
-        <th>Foto</th>
-        <th>Tanggal Pinjam</th>
-        <th>Tanggal Kembali (Rencana)</th>
-        <th>Jumlah</th>
-        <th>Catatan</th>
-        <th>Aksi</th>
-    </tr>
-    @php $no = 1; @endphp
-    @foreach ($data as $item)
-    <tr>
-        <td class="text-center">{{ $no++ }}</td>
-        <td>{{ $item->nama_alat }}</td>
-        <td>{{ $item->kategori->nama_kategori ?? '-' }}</td>
-        <td>{{ $item->stok }}</td>
-        <td><img src="/uploads/foto_alat/{{ $item->foto_alat }}" alt="Foto {{ $item->nama_alat }}" width="80"></td>
-        <td>
-            <input type="date" id="tanggal_pinjam" name="tanggal_pinjam" required
-                class="form-control form-control-sm" form="form-ajukan-{{ $item->id_alat }}" placeholder="Tanggal Pinjam">
-        </td>
-        <td>
-            <input type="date" id="tanggal_kembali_rencana" name="tanggal_kembali_rencana" required
-                class="form-control form-control-sm" form="form-ajukan-{{ $item->id_alat }}" placeholder="Tanggal Kembali (rencana)">
-        </td>
-        <td>
-            <input type="number" id="jumlah_{{ $item->id_alat }}" name="jumlah_pinjam" min="1" max="{{ $item->stok }}" required
-                class="form-control form-control-sm" style="width:70px" form="form-ajukan-{{ $item->id_alat }}" placeholder="0">
-        </td>
-        <td>
+        return route('peminjam.alat.index') . ($parameterQuery ? '?' . http_build_query($parameterQuery) : '');
+    };
+@endphp
 
-            <input type="text" id="catatan_{{ $item->id_alat }}" name="catatan"
-                class="form-control form-control-sm" form="form-ajukan-{{ $item->id_alat }}" placeholder="opsional">
-        </td>
-        <td>
-            <button type="submit" form="form-ajukan-{{ $item->id_alat }}" class="btn btn-primary btn-sm">Ajukan</button>
-        </td>
-    </tr>
-    @endforeach
-</table>
-{!! $data->links() !!}
+<div class="latar-peminjam">
+    @include('partials.page-head', [
+        'judul' => 'Katalog Alat',
+        'sub'   => $daftarAlat->total() . ' alat ditemukan. Pilih satu alat untuk mulai meminjam.',
+    ])
+
+    <form method="get" action="{{ route('peminjam.alat.index') }}" class="katalog-cari">
+        @if ($kategoriDipilih !== '')
+            <input type="hidden" name="kategori" value="{{ $kategoriDipilih }}">
+        @endif
+        <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input type="search" name="q" value="{{ $kataKunci }}" class="form-control" placeholder="Cari nama atau kode alat" aria-label="Cari alat">
+            <button type="submit" class="btn btn-brand">Cari</button>
+        </div>
+    </form>
+
+    <nav class="filter-kategori" aria-label="Filter kategori">
+        <a href="{{ $urlKatalog(null) }}" class="filter-pill {{ $kategoriDipilih === '' ? 'aktif' : '' }}">Semua</a>
+        @foreach ($kategoriList as $kategori)
+            <a href="{{ $urlKatalog($kategori->id_kategori) }}"
+               class="filter-pill {{ $kategoriDipilih === (string) $kategori->id_kategori ? 'aktif' : '' }}">{{ $kategori->nama_kategori }}</a>
+        @endforeach
+    </nav>
+
+    @if (count($daftarAlat) > 0)
+        <div class="katalog-grid">
+            @php $urutanKartu = 0; @endphp
+            @foreach ($daftarAlat as $alat)
+                @include('partials.kartu-alat', ['alat' => $alat, 'urutan' => $urutanKartu++])
+            @endforeach
+        </div>
+
+        <div class="pager">{!! $daftarAlat->links() !!}</div>
+    @else
+        <div class="katalog-kosong">
+            <h2>Tidak ada alat yang cocok</h2>
+            <p>Ubah kata kunci atau pilih kategori lain.</p>
+            @if ($adaFilter)
+                <a href="{{ route('peminjam.alat.index') }}" class="btn btn-outline-secondary btn-sm">Tampilkan semua alat</a>
+            @endif
+        </div>
+    @endif
+</div>
 @endsection

@@ -64,6 +64,7 @@ $canRegister = false;
             <!--petugas-->
             @if ($currentUser->role === 'petugas')
             <li class="nav-item">
+                <hr>
                 <span class="small d-block text-body-secondary mb-1 px-3">Peminjaman & Pengembalian</span>
             <li class="nav-item">
                 <a class="nav-link {{ is_route('petugas.peminjaman.index') ? 'active' : '' }}" href="{{ route('petugas.peminjaman.index') }}">
@@ -85,6 +86,7 @@ $canRegister = false;
                 </a>
             </li>
              <li class="nav-item">
+                <hr>
                 <span class="small d-block text-body-secondary mb-1 px-3">Cetak</span>
             </li>
             <li class="nav-item">
@@ -100,8 +102,8 @@ $canRegister = false;
                     <hr>
                     <span class="small d-block text-body-secondary mt-1 mb-1 px-4">Peminjaman</span>
                 </li>
-                <a class="nav-link {{ is_route('peminjam.alat.index') ? 'active' : '' }}" href="{{ route('peminjam.alat.index') }}">
-                    <i class="bi bi-journal-text"></i><span>Pinjaman Saya</span>
+                <a class="nav-link {{ is_route('peminjam.alat.index', 'peminjam.alat.show') ? 'active' : '' }}" href="{{ route('peminjam.alat.index') }}">
+                    <i class="bi bi-journal-text"></i><span>Katalog Alat</span>
                 </a>
                 <a class="nav-link {{ is_route('peminjam.riwayat') ? 'active' : '' }}" href="{{ route('peminjam.riwayat') }}">
                     <i class="bi bi-clock-history"></i><span>Riwayat Peminjaman</span>

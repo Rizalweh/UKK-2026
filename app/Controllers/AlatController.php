@@ -9,6 +9,8 @@ use App\Models\Kategori;
 
 class AlatController extends Controller
 {
+    private const PER_HALAMAN_KATALOG = 9;
+
     // path absolut ke folder upload, dihitung sekali
     private function uploadPath(): string
     {
@@ -110,10 +112,39 @@ class AlatController extends Controller
         return redirect(route('alat.index'))->with('success', 'Data berhasil dihapus');
     }
 
-    // Peminjam: hanya tampilkan alat dengan stok tersedia
-public function daftarAlat(Request $request)
-{
-    $data = Alat::where('stok', '>', 0)->OrderBy('nama_alat', 'asc')->paginate(9);
-    return view('peminjam.alat.index', compact('data'));
-}
+    // Peminjam: katalog alat. Semua alat tampil; yang stoknya habis diredupkan di view.
+    public function daftarAlat(Request $request)
+    {
+        $kataKunci       = trim((string) $request->input('q', ''));
+        $kategoriDipilih = (string) $request->input('kategori', '');
+
+        $queryAlat = Alat::with('kategori')->orderBy('nama_alat', 'asc');
+
+        if ($kataKunci !== '') {
+            $queryAlat = $queryAlat->where(function ($kondisiCari) use ($kataKunci) {
+                $kondisiCari->where('nama_alat', 'like', '%' . $kataKunci . '%')
+                            ->orWhere('kode_alat', 'like', '%' . $kataKunci . '%');
+            });
+        }
+
+        if ($kategoriDipilih !== '') {
+            $queryAlat = $queryAlat->where('id_kategori', $kategoriDipilih);
+        }
+
+        return view('peminjam.alat.index', [
+            'daftarAlat'      => $queryAlat->paginate(self::PER_HALAMAN_KATALOG),
+            'kategoriList'    => Kategori::orderBy('nama_kategori')->get(),
+            'kataKunci'       => $kataKunci,
+            'kategoriDipilih' => $kategoriDipilih,
+        ]);
+    }
+
+    // Peminjam: halaman satu alat berisi form peminjaman
+    public function detail(Request $request, $id)
+    {
+        return view('peminjam.alat.show', [
+            'alat'    => Alat::findOrFail($id),
+            'hariIni' => date('Y-m-d'),
+        ]);
+    }
 }
