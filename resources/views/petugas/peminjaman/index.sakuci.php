@@ -29,7 +29,7 @@
     <td>{{ $p->kode_peminjaman }}</td>
     <td>{{ $p->peminjam->username }}</td>
     <td>{{ $p->alat->nama_alat }}</td>
-    <td></td>{{ $p->alat->kategori->nama_kategori ?? '-' }}</td>
+    <td>{{ $p->alat->kategori->nama_kategori ?? '-' }}</td>
     <td>{{ $p->alat->stok }}</td>
     <td><img src="/uploads/foto_alat/{{ $p->alat->foto_alat }}" alt="Foto {{ $p->alat->nama_alat }}" width="80"></td>
     <td>{{ $p->alat->kondisi }}</td>
