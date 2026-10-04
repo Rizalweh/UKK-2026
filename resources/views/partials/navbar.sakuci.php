@@ -103,7 +103,7 @@ $canRegister = false;
                     <span class="small d-block text-body-secondary mt-1 mb-1 px-4">Peminjaman</span>
                 </li>
                 <a class="nav-link {{ is_route('peminjam.alat.index', 'peminjam.alat.show') ? 'active' : '' }}" href="{{ route('peminjam.alat.index') }}">
-                    <i class="bi bi-journal-text"></i><span>Katalog Alat</span>
+                    <i class="bi bi-grid"></i><span>Katalog Alat</span>
                 </a>
                 <a class="nav-link {{ is_route('peminjam.riwayat') ? 'active' : '' }}" href="{{ route('peminjam.riwayat') }}">
                     <i class="bi bi-clock-history"></i><span>Riwayat Peminjaman</span>
@@ -111,6 +111,10 @@ $canRegister = false;
                 <a class="nav-link {{ is_route('peminjam.dipinjam') ? 'active' : '' }}" href="{{ route('peminjam.dipinjam') }}">
                     <i class="bi bi-stopwatch"></i><span>Alat Sedang Dipinjam</span>
                 </a>
+                <li class="nav-item">
+                    <hr>
+                    <span class="small d-block text-body-secondary mt-1 mb-1 px-4">Denda</span>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link {{ is_route('peminjam.denda') ? 'active' : '' }}" href="{{ route('peminjam.denda') }}">
                         <i class="bi bi-cash-stack"></i><span>Denda Saya</span>

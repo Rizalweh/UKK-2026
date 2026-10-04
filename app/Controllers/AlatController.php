@@ -132,10 +132,16 @@ class AlatController extends Controller
         }
 
         return view('peminjam.alat.index', [
-            'daftarAlat'      => $queryAlat->paginate(self::PER_HALAMAN_KATALOG),
-            'kategoriList'    => Kategori::orderBy('nama_kategori')->get(),
-            'kataKunci'       => $kataKunci,
-            'kategoriDipilih' => $kategoriDipilih,
+            'daftarAlat'       => $queryAlat->paginate(self::PER_HALAMAN_KATALOG),
+            'kategoriList'     => Kategori::orderBy('nama_kategori')->get(),
+            'kataKunci'        => $kataKunci,
+            'kategoriDipilih'  => $kategoriDipilih,
+            'stokTertinggi'    => Alat::stokTertinggi(),
+            'ringkasanKatalog' => [
+                'jenisAlat'      => Alat::count(),
+                'alatTersedia'   => Alat::where('stok', '>', 0)->count(),
+                'jumlahKategori' => Kategori::count(),
+            ],
         ]);
     }
 
@@ -143,8 +149,9 @@ class AlatController extends Controller
     public function detail(Request $request, $id)
     {
         return view('peminjam.alat.show', [
-            'alat'    => Alat::findOrFail($id),
-            'hariIni' => date('Y-m-d'),
+            'alat'          => Alat::findOrFail($id),
+            'hariIni'       => date('Y-m-d'),
+            'stokTertinggi' => Alat::stokTertinggi(),
         ]);
     }
 }

@@ -78,35 +78,57 @@ class PeminjamanController extends Controller
             ->with('success', 'Peminjaman ditolak.');
     }
 
-     public function ajukan(Request $request)
+        private const ATURAN_PENGAJUAN = [
+        'id_alat'                 => 'required|exists:alat,id_alat',
+        'jumlah_pinjam'           => 'required|integer|min:1',
+        'tanggal_pinjam'          => 'required|date',
+        'tanggal_kembali_rencana' => 'required|date',
+        'catatan'                 => 'nullable|max:255',
+    ];
+
+    // Peminjam: kirim pengajuan dari halaman alat
+    public function ajukan(Request $request)
     {
-        $data = $request->all();
-        $user = User::current();
-        
+        $dataPengajuan = $request->validate(self::ATURAN_PENGAJUAN);
+        $peminjam      = User::current();
+        $alat          = Alat::findOrFail($dataPengajuan['id_alat']);
+        $halamanAlat   = route('peminjam.alat.show', ['id' => $alat->id_alat]);
+        $jumlahPinjam  = (int) $dataPengajuan['jumlah_pinjam'];
 
-        $alat = Alat::FindOrFail($data['id_alat']);
-
-        if ($alat->stok < $data['jumlah_pinjam']) {
-            return redirect(route('peminjam.alat.index'))
-                ->with('error', "Stok {$alat->nama_alat} tidak mencukupi.");
+        if (strtotime($dataPengajuan['tanggal_pinjam']) < strtotime(date('Y-m-d'))) {
+            return redirect($halamanAlat)
+                ->with('error', 'Tanggal pinjam tidak boleh sebelum hari ini.')
+                ->withInput();
         }
 
-        Peminjaman::create([
+        if (strtotime($dataPengajuan['tanggal_kembali_rencana']) < strtotime($dataPengajuan['tanggal_pinjam'])) {
+            return redirect($halamanAlat)
+                ->with('error', 'Tanggal kembali tidak boleh sebelum tanggal pinjam.')
+                ->withInput();
+        }
+
+        if ((int) $alat->stok < $jumlahPinjam) {
+            return redirect($halamanAlat)
+                ->with('error', "Stok {$alat->nama_alat} hanya {$alat->stok}.")
+                ->withInput();
+        }
+
+        $peminjaman = Peminjaman::create([
             'kode_peminjaman'         => 'PJM-' . strtoupper(substr(md5(uniqid()), 0, 8)),
-            'id_peminjam'             => $user->id,
-            'id_alat'                 => $data['id_alat'],
-            'jumlah_pinjam'           => $data['jumlah_pinjam'],
+            'id_peminjam'             => $peminjam->id,
+            'id_alat'                 => $alat->id_alat,
+            'jumlah_pinjam'           => $jumlahPinjam,
             'tanggal_pengajuan'       => date('Y-m-d'),
-            'tanggal_pinjam'          => $data['tanggal_pinjam'],
-            'tanggal_kembali_rencana' => $data['tanggal_kembali_rencana'],
+            'tanggal_pinjam'          => $dataPengajuan['tanggal_pinjam'],
+            'tanggal_kembali_rencana' => $dataPengajuan['tanggal_kembali_rencana'],
             'status_peminjaman'       => 'pending',
-            'catatan'                 => $data['catatan'] ?? null,
+            'catatan'                 => $dataPengajuan['catatan'] ?: null,
         ]);
 
-        LogAktivitas::catat($user->id, "Mengajukan peminjaman {$alat->nama_alat} (jumlah: {$data['jumlah_pinjam']})");
+        LogAktivitas::catat($peminjam->id, "Mengajukan peminjaman {$alat->nama_alat} (jumlah: {$jumlahPinjam})");
 
-        return redirect(route('peminjam.alat.index'))
-            ->with('success', 'Pengajuan berhasil dikirim, menunggu persetujuan Petugas.');
+        return redirect(route('peminjam.riwayat'))
+            ->with('success', "Pengajuan {$peminjaman->kode_peminjaman} berhasil dikirim, menunggu persetujuan petugas.");
     }
 
     public function sedangDipinjam(Request $request)

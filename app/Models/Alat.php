@@ -7,10 +7,10 @@ use Sakuci\Database\Model;
 
 class Alat extends Model
 {
-    /** Folder foto alat, relatif terhadap folder public. */
+    /** foto alat ke folder public. */
     public const FOLDER_FOTO = 'uploads/foto_alat';
 
-    /** Kondisi alat -> nada warna di theme.css (kelas tone-*). */
+    /** design kondisi alat nada warna di theme.css (kelas tone-*). */
     public const NADA_KONDISI = [
         'Baik'         => 'ok',
         'Rusak Ringan' => 'warn',
@@ -41,6 +41,24 @@ class Alat extends Model
     public function nadaKondisi(): string
     {
         return self::NADA_KONDISI[$this->kondisi] ?? 'muted';
+    }
+
+    /** Stok paling banyak di seluruh alat; dipakai sebagai pembanding meter stok. */
+    public static function stokTertinggi(): int
+    {
+        $baris = Connection::selectOne('SELECT COALESCE(MAX(stok), 0) AS total FROM alat');
+
+        return (int) ($baris['total'] ?? 0);
+    }
+
+    /** Persentase stok alat ini terhadap stok tertinggi (0 sampai 100), untuk meter. */
+    public function persenStok(int $stokTertinggi): int
+    {
+        if ($stokTertinggi <= 0) {
+            return 0;
+        }
+
+        return (int) round(min(1, (int) $this->stok / $stokTertinggi) * 100);
     }
 
     /**
