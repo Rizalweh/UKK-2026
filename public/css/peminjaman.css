@@ -509,3 +509,169 @@
     .medan { transition: none; }
     .kartu-alat:hover { transform: none; }
 }
+
+/* ===== Riwayat peminjam: tempel di akhir peminjaman.css ===== */
+
+.riwayat-hero { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.75rem; }
+.riwayat-ubin { display: grid; grid-template-columns: repeat(4, 1fr); gap: .75rem; margin-bottom: 1.5rem; }
+
+.riwayat-kartu {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 1.25rem 1.75rem;
+    align-items: center;
+    margin-bottom: .9rem;
+    padding: 1.25rem 1.5rem;
+}
+
+.riwayat-alat { display: flex; align-items: center; gap: .9rem; min-width: 0; }
+.riwayat-foto {
+    position: relative;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    overflow: hidden;
+    border-radius: var(--bs-border-radius);
+    background: var(--media-bg);
+    color: var(--brand-text);
+}
+.riwayat-foto img { position: absolute; inset: 0; width: 100%; height: 100%; padding: .3rem; object-fit: contain; }
+.riwayat-nama { margin: 0 0 .15rem; font-size: 1.05rem; font-weight: 600; letter-spacing: -.02em; }
+.riwayat-jumlah { font-weight: 400; color: var(--bs-secondary-color); }
+
+.riwayat-tgl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem 1rem; margin: 0; }
+.riwayat-tgl dt { margin-bottom: .1rem; }
+.riwayat-tgl dd { margin: 0; font-size: .92rem; font-weight: 500; }
+
+.riwayat-bawah {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: .6rem 1rem;
+    padding-top: .9rem;
+    border-top: 1px dashed var(--panel-dalam-border);
+}
+.riwayat-info { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1rem; min-width: 0; }
+.riwayat-catatan { font-size: .85rem; color: var(--bs-secondary-color); }
+
+/* Jalur status: titik terisi = sudah lewat, bercincin = sedang di sini */
+.jalur { display: flex; margin: 0; padding: 0; list-style: none; }
+.jalur li { position: relative; display: flex; flex: 1; flex-direction: column; gap: .45rem; min-width: 0; padding-right: .4rem; }
+.jalur li::after { content: ""; position: absolute; top: .42rem; left: 1.1rem; right: .2rem; height: 2px; background: var(--panel-border); }
+.jalur li:last-child::after { display: none; }
+.jalur li.lewat::after { background: var(--tc, var(--brand)); }
+.titik-jalur { position: relative; z-index: 1; width: .9rem; height: .9rem; border-radius: 50%; border: 2px solid var(--panel-border); background: var(--panel-bg); }
+.jalur li.lewat .titik-jalur,
+.jalur li.kini .titik-jalur { border-color: var(--tc, var(--brand)); background: var(--tc, var(--brand)); }
+.jalur li.kini .titik-jalur { box-shadow: 0 0 0 4px var(--tb, var(--brand-subtle)); }
+.jalur .label-mono { font-size: .66rem; }
+.jalur li.kini .label-mono { color: var(--bs-body-color); }
+
+@media (max-width: 991.98px) {
+    .riwayat-ubin { grid-template-columns: repeat(2, 1fr); }
+    .riwayat-kartu { grid-template-columns: 1fr; }
+}
+
+/* ===== Riwayat peminjam: tempel di akhir peminjaman.css ===== */
+
+.riwayat-hero { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.75rem; }
+.riwayat-ubin { display: grid; grid-template-columns: repeat(4, 1fr); gap: .75rem; margin-bottom: 1.5rem; }
+
+.riwayat-kartu {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 1.25rem 1.75rem;
+    align-items: center;
+    margin-bottom: .9rem;
+    padding: 1.25rem 1.5rem;
+}
+
+.riwayat-alat { display: flex; align-items: center; gap: .9rem; min-width: 0; }
+.riwayat-foto {
+    position: relative;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    overflow: hidden;
+    border-radius: var(--bs-border-radius);
+    background: var(--media-bg);
+    color: var(--brand-text);
+}
+.riwayat-foto img { position: absolute; inset: 0; width: 100%; height: 100%; padding: .3rem; object-fit: contain; }
+.riwayat-nama { margin: 0 0 .15rem; font-size: 1.05rem; font-weight: 600; letter-spacing: -.02em; }
+.riwayat-jumlah { font-weight: 400; color: var(--bs-secondary-color); }
+
+.riwayat-tgl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem 1rem; margin: 0; }
+.riwayat-tgl dt { margin-bottom: .1rem; }
+.riwayat-tgl dd { margin: 0; font-size: .92rem; font-weight: 500; }
+
+.riwayat-bawah {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: .6rem 1rem;
+    padding-top: .9rem;
+    border-top: 1px dashed var(--panel-dalam-border);
+}
+.riwayat-info { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1rem; min-width: 0; }
+.riwayat-catatan { font-size: .85rem; color: var(--bs-secondary-color); }
+
+/* Jalur status: titik terisi = sudah lewat, bercincin = sedang di sini */
+.jalur { display: flex; margin: 0; padding: 0; list-style: none; }
+.jalur li { position: relative; display: flex; flex: 1; flex-direction: column; gap: .45rem; min-width: 0; padding-right: .4rem; }
+.jalur li::after { content: ""; position: absolute; top: .42rem; left: 1.1rem; right: .2rem; height: 2px; background: var(--panel-border); }
+.jalur li:last-child::after { display: none; }
+.jalur li.lewat::after { background: var(--tc, var(--brand)); }
+.titik-jalur { position: relative; z-index: 1; width: .9rem; height: .9rem; border-radius: 50%; border: 2px solid var(--panel-border); background: var(--panel-bg); }
+.jalur li.lewat .titik-jalur,
+.jalur li.kini .titik-jalur { border-color: var(--tc, var(--brand)); background: var(--tc, var(--brand)); }
+.jalur li.kini .titik-jalur { box-shadow: 0 0 0 4px var(--tb, var(--brand-subtle)); }
+.jalur .label-mono { font-size: .66rem; }
+.jalur li.kini .label-mono { color: var(--bs-body-color); }
+
+@media (max-width: 991.98px) {
+    .riwayat-ubin { grid-template-columns: repeat(2, 1fr); }
+    .riwayat-kartu { grid-template-columns: 1fr; }
+}
+
+/* ===== Sedang dipinjam: tempel di akhir peminjaman.css (setelah bagian riwayat) ===== */
+
+.dipinjam-ubin { display: grid; grid-template-columns: repeat(3, 1fr); gap: .75rem; margin-bottom: 1.75rem; }
+.dipinjam-judul { margin: 2rem 0 .25rem; font-size: 1.15rem; font-weight: 600; letter-spacing: -.02em; }
+.dipinjam-sub { margin: 0 0 1rem; font-size: .9rem; color: var(--bs-secondary-color); }
+
+.dipinjam-kartu {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.3fr) auto;
+    gap: 1.25rem 1.75rem;
+    align-items: center;
+    margin-bottom: .9rem;
+    padding: 1.25rem 1.5rem;
+}
+.dipinjam-kartu.tone-danger { border-color: var(--tc); }
+.dipinjam-menunggu { opacity: .85; }
+.dipinjam-sisa { margin: 0 0 .2rem; font-size: 1.6rem; font-weight: 500; letter-spacing: -.03em; color: var(--tc); }
+.dipinjam-kartu.tone-muted .dipinjam-sisa { color: var(--bs-body-color); }
+.dipinjam-kartu.tone-warn .meter > span,
+.dipinjam-kartu.tone-danger .meter > span { background: var(--tc); }
+.dipinjam-kartu .meter { margin-top: .4rem; }
+
+@media (max-width: 991.98px) {
+    .dipinjam-kartu { grid-template-columns: 1fr; }
+}
+
+/* ===== Latar tetap: tempel di akhir peminjaman.css (paling bawah) =====
+   Cahaya menempel di layar dan berada di belakang semua elemen, jadi tidak
+   terpotong di tepi kotak konten dan tidak menimpa banner di atasnya.
+   Dipakai hanya di riwayat dan sedang dipinjam (kelas latar-tetap). */
+.latar-peminjam.latar-tetap { isolation: auto; overflow: visible; }
+.latar-peminjam.latar-tetap::before,
+.latar-peminjam.latar-tetap::after { position: fixed; inset: 0; }

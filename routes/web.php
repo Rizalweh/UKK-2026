@@ -136,6 +136,8 @@ Route::group(['prefix' => 'peminjam', 'middleware' => 'peminjam'], function () {
     Route::get('/peminjaman/riwayat', [PeminjamanController::class, 'riwayat'])->name('peminjam.riwayat');
     Route::get('/peminjaman/dipinjam', [PeminjamanController::class, 'sedangDipinjam'])->name('peminjam.dipinjam');
 
+    Route::put('/peminjaman/{id}/batalkan', [PeminjamanController::class, 'batalkan'])->name('peminjam.batalkan');
+
     Route::get('/denda', [PeminjamanController::class, 'denda'])->name('peminjam.denda');
 
 });

@@ -133,21 +133,25 @@ class PeminjamanController extends Controller
 
     public function sedangDipinjam(Request $request)
 {
-    $user = User::current();
+    $user  = User::current();
+    $milik = fn () => Peminjaman::where('id_peminjam', $user->id);
 
-    // Alat yang sedang dipinjam
-    $dipinjam = Peminjaman::where('id_peminjam', $user->id)
-        ->where('status_peminjaman', 'disetujui')
-        ->OrderBy('tanggal_kembali_rencana', 'asc')
-        ->get();
+    $dipinjam = $milik()->where('status_peminjaman', 'disetujui')
+        ->with('alat')->OrderBy('tanggal_kembali_rencana', 'asc')->get();
 
-    // Alat yang sudah diajukan kembali, menunggu Petugas
-    $menunggu = Peminjaman::where('id_peminjam', $user->id)
-        ->where('status_peminjaman', 'menunggu_pengembalian')
-        ->OrderBy('tanggal_kembali_rencana', 'asc')
-        ->get();
+    $menunggu = $milik()->where('status_peminjaman', 'menunggu_pengembalian')
+        ->with('alat')->OrderBy('tanggal_kembali_rencana', 'asc')->get();
 
-    return view('peminjam.dipinjam.index', compact('dipinjam', 'menunggu'));
+    $hariIni = strtotime(date('Y-m-d'));
+    $sisa    = fn ($p) => (int) floor((strtotime($p->tanggal_kembali_rencana) - $hariIni) / 86400);
+
+    $ringkasan = [
+        'dipinjam' => count($dipinjam),
+        'tempo'    => count(array_filter($dipinjam, fn ($p) => $sisa($p) >= 0 && $sisa($p) <= 1)),
+        'telat'    => count(array_filter($dipinjam, fn ($p) => $sisa($p) < 0)),
+    ];
+
+    return view('peminjam.dipinjam.index', compact('dipinjam', 'menunggu', 'ringkasan'));
 }
 public function ajukanPengembalian(Request $request, $id)
 {
@@ -171,15 +175,56 @@ public function ajukanPengembalian(Request $request, $id)
 }
 
 // Peminjam: riwayat semua peminjamannya (termasuk denda final)
+private const PER_HALAMAN_RIWAYAT = 8;
+
 public function riwayat(Request $request)
 {
-    $user = User::current();
+    $user         = User::current();
+    $statusFilter = (string) $request->input('status', '');
+    $kode         = trim((string) $request->input('q', ''));
+    $milik        = fn () => Peminjaman::where('id_peminjam', $user->id);
 
-    $data = Peminjaman::where('id_peminjam', $user->id)
-        ->OrderBy('id_peminjaman', 'desc')
-        ->paginate(10);
+    $query = $milik()->OrderBy('id_peminjaman', 'desc');
+    if (isset(Peminjaman::STATUS[$statusFilter])) {
+        $query = $query->where('status_peminjaman', $statusFilter);
+    }
+    if ($kode !== '') {
+        $query = $query->where('kode_peminjaman', 'like', '%' . $kode . '%');
+    }
 
-    return view('peminjam.riwayat.index', compact('data'));
+    $tunggakan = Pengembalian::tunggakan($user->id);
+
+    return view('peminjam.riwayat.index', [
+        'data'         => $query->with(['alat', 'pengembalian'])->paginate(self::PER_HALAMAN_RIWAYAT),
+        'statusFilter' => $statusFilter,
+        'kode'         => $kode,
+        'ringkasan'    => [
+            'menunggu' => $milik()->where('status_peminjaman', 'pending')->count(),
+            'dipinjam' => $milik()->whereIn('status_peminjaman', ['disetujui', 'menunggu_pengembalian'])->count(),
+            'selesai'  => $milik()->where('status_peminjaman', 'dikembalikan')->count(),
+            'denda'    => $tunggakan['jumlah'],
+            'dendaRp'  => $tunggakan['total'],
+        ],
+    ]);
+}
+
+public function batalkan(Request $request, $id)
+{
+    $user       = User::current();
+    $peminjaman = Peminjaman::FindOrFail($id);
+
+    if ((int) $peminjaman->id_peminjam !== (int) $user->id) {
+        return redirect(route('peminjam.riwayat'))->with('error', 'Pengajuan ini bukan milik kamu.');
+    }
+    if ($peminjaman->status_peminjaman !== 'pending') {
+        return redirect(route('peminjam.riwayat'))->with('error', 'Hanya pengajuan yang masih pending yang bisa dibatalkan.');
+    }
+
+    $peminjaman->update(['status_peminjaman' => 'dibatalkan']);
+
+    LogAktivitas::catat($user->id, "Membatalkan pengajuan {$peminjaman->kode_peminjaman}");
+
+    return redirect(route('peminjam.riwayat'))->with('success', 'Pengajuan dibatalkan.');
 }
 
 public function riwayatSemua(Request $request)
