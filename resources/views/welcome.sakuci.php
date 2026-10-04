@@ -240,9 +240,9 @@
 
         <h1 class="lp-h1">
             @if ($currentUser) Halo, {{ $currentUser->username }}.<br> @endif
-            Pinjam alat sekolah <span class="serif">tanpa antre</span>
+            Selamat Datang Di <span class="serif">Sarpras Tech</span>
         </h1>
-        <p class="lp-sub">Cek stok, ajukan peminjaman, dan pantau pengembalian serta denda dari satu halaman.</p>
+        <p class="lp-sub">Cek stok, ajukan peminjaman, dan pantau pengembalian serta denda.</p>
 
         <div class="lp-cta">
             <a href="{{ $cta[0][1] }}" class="lp-btn">{{ $cta[0][0] }} <i class="bi bi-arrow-right"></i></a>

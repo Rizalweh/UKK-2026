@@ -16,6 +16,7 @@ use App\Controllers\LogAktivitasController;
 use App\Controllers\Core\PeminjamController as AdminPeminjamController;
 use App\Controllers\Core\AdminPeminjamanController;
 use App\Controllers\Core\AdminPengembalianController;
+use App\Controllers\ProfilController;
 use Sakuci\Route;
 
 /*
@@ -139,6 +140,10 @@ Route::group(['prefix' => 'peminjam', 'middleware' => 'peminjam'], function () {
     Route::put('/peminjaman/{id}/batalkan', [PeminjamanController::class, 'batalkan'])->name('peminjam.batalkan');
 
     Route::get('/denda', [PeminjamanController::class, 'denda'])->name('peminjam.denda');
+
+    Route::get('/profil', [ProfilController::class, 'index'])->name('peminjam.profil');
+    Route::put('/profil', [ProfilController::class, 'update'])->name('peminjam.profil.update');
+    Route::put('/profil/password', [ProfilController::class, 'ubahPassword'])->name('peminjam.profil.password');
 
 });
     

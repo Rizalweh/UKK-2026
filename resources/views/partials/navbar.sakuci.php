@@ -98,6 +98,15 @@ $canRegister = false;
 
                 <!--peminjam -->
                 @if ($currentUser->role === 'peminjam')
+                                <li class="nav-item">
+                    <hr>
+                    <span class="small d-block text-body-secondary mt-1 mb-1 px-4">Akun</span>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ is_route('peminjam.profil') ? 'active' : '' }}" href="{{ route('peminjam.profil') }}">
+                        <i class="bi bi-person-circle"></i><span>Profil Saya</span>
+                    </a>
+                </li>
                 <li class="nav-item">
                     <hr>
                     <span class="small d-block text-body-secondary mt-1 mb-1 px-4">Peminjaman</span>
