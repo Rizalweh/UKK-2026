@@ -36,9 +36,4 @@ class LogAktivitasController extends Controller
             ->with('success', $jumlah . ' log lama berhasil dihapus');
     }
 
-    public function destroy(Request $request, $id)
-    {
-        LogAktivitas::destroy($id);
-        return back()->with('success', 'Aktivitas Telah Dihapus.');
-    }
 }

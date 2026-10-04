@@ -34,7 +34,6 @@
                         <th>Waktu</th>
                         <th>User</th>
                         <th>Aktivitas</th>
-                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -43,13 +42,6 @@
                         <td>{{ $log->waktu }}</td>
                         <td>{{ $log->user->profil->nama_lengkap ?? $log->user->username ?? '(user dihapus)' }}</td>
                         <td>{{ $log->aktivitas }}</td>
-                        <td>
-                    <form action="{{ route('admin.log.destroy', ['id' => $log->id_log]) }}" method="post">
-                        @csrf
-                        @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('yakin ingin Hapus aktivitas ini?')">Hapus</button>
-                    </form>
-                        </td>
                     </form>
                     </tr>
                     @empty

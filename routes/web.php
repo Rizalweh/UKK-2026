@@ -66,7 +66,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('admin.users.destroy');
 
     Route::get('/log', [LogAktivitasController::class, 'index'])->name('admin.log.index');
-    Route::delete('/log/{id}', [LogAktivitasController::class, 'destroy'])->name('admin.log.destroy');
     Route::delete('/log', [LogAktivitasController::class, 'hapusLama'])->name('admin.log.hapusLama');
 
     Route::get('/database/export', [DatabaseController::class, 'export'])->name('admin.database.export');
