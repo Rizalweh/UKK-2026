@@ -36,6 +36,7 @@
 {{-- kop laporan saat dicetak --}}
 <div class="text-center mb-3">
     <h2 class="h5 mb-0">LAPORAN PEMINJAMAN ALAT</h2>
+    <img src="{{ asset('img/logo/sarpras-lockup-horizontal-warna.svg') }}" alt="SARPRAS TECH" height="40" class="mb-2">
     <div class="small">SARPRAS TECH</div>
     <div class="small">
         Periode: {{ $dari ?: '-' }} s/d {{ $sampai ?: '-' }}

@@ -266,3 +266,6 @@ code.inline {
     table { font-size: 11px; }
 }
 
+.logo-gelap { display: none; }
+[data-bs-theme="dark"] .logo-terang { display: none; }
+[data-bs-theme="dark"] .logo-gelap { display: inline; }

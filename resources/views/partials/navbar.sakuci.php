@@ -40,7 +40,10 @@ $canRegister = false;
                 <i class="bi bi-moon-stars-fill theme-icon theme-icon-dark" aria-hidden="true"></i>
                 <span class="db-status-dot {{ $dbConnected ? 'bg-success' : 'bg-danger' }}"></span>
             </button>
-            <a class="navbar-brand fw-semibold m-0 me-auto sidebar-text" href="{{ route('home') }}">{{ config('app.name') }}</a>
+            <a class="navbar-brand m-0 me-auto sidebar-text" href="{{ route('home') }}">
+                <img src="{{ asset('img/logo/sarpras-lockup-horizontal-warna.svg') }}" alt="SARPRAS TECH" height="28" class="logo-terang">
+                <img src="{{ asset('img/logo/sarpras-lockup-horizontal-gelap.svg') }}" alt="SARPRAS TECH" height="28" class="logo-gelap">
+            </a>
             <button type="button" class="btn-close d-lg-none" data-bs-dismiss="offcanvas"
                 data-bs-target="#sidebar" aria-label="Tutup menu"></button>
         </div>
