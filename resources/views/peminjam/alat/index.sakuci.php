@@ -21,7 +21,7 @@
 
     <header class="katalog-hero">
         <div>
-            <h1 class="teks-display">Pilih alat yang kamu butuhkan</h1>
+            <h1 class="teks-display">Pilih alat yang Dibutuhkan</h1>
             <p class="katalog-sub">Buka salah satu alat untuk melihat detailnya, lalu isi tanggal dan jumlah untuk mengajukan peminjaman.</p>
         </div>
 

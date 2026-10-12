@@ -26,7 +26,7 @@
     <header class="riwayat-hero">
         <div>
             <h1 class="teks-display teks-display-sedang">Riwayat peminjaman</h1>
-            <p class="katalog-sub">Pantau status setiap pengajuan, dari menunggu persetujuan sampai alat dikembalikan.</p>
+            <p class="katalog-sub">Pantau status setiap pengajuan, dari menunggu persetujuan sampai Alat dikembalikan.</p>
         </div>
         <a href="{{ route('peminjam.alat.index') }}" class="btn btn-brand rounded-pill px-4">Pinjam alat</a>
     </header>

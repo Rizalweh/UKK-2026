@@ -51,7 +51,7 @@
     <th>Peminjam</th>
     <th>Alat</th>
     <th>Jumlah</th>
-    <th>Tgl Pinjam</th>
+    <th>Tanggal Pinjam</th>
     <th>Rencana Kembali</th>
     <th>Status</th>
     <th>Kembali (Aktual)</th>
