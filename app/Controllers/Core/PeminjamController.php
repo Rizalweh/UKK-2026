@@ -27,6 +27,7 @@ class PeminjamController extends Controller
             'username'     => 'required|min:3|max:50|alpha_dash|unique:users,username',
             'password'     => 'required|min:6',
             'nama_lengkap' => 'required|min:3|max:100',
+            'nis'          => 'required|numeric|unique:profil,nis',
             'no_hp'        => 'required|numeric',
             'alamat'       => 'nullable|max:255',
         ]);
@@ -40,6 +41,7 @@ class PeminjamController extends Controller
         Profil::create([
             'id_user'      => $user->id,
             'nama_lengkap' => $data['nama_lengkap'],
+            'nis'          => $data['nis'],
             'no_hp'        => $data['no_hp'],
             'alamat'       => $data['alamat'],
         ]);

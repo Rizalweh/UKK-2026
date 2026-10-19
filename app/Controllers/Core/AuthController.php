@@ -42,19 +42,19 @@ class AuthController extends Controller
             'role'     => 'required|in:' . implode(',', $allowed),
         ]);
         
-        $user = User::create([
-    'username' => $data['username'],
-    'password' => password_hash($data['password'], PASSWORD_DEFAULT),
-    'role'     => $data['role'],
-]);
-
-if ($data['role'] === 'peminjam') {
-    $profil = $request->validate([
+    if ($data['role'] === 'peminjam') {
+      $profil = $request->validate([
         'nama_lengkap' => 'required|min:3|max:100',
         'no_hp'        => 'required|numeric',
         'alamat'       => 'nullable|max:255',
         'nis'          => 'required|numeric|unique:profil,nis',
     ]);
+
+        $user = User::create([
+    'username' => $data['username'],
+    'password' => password_hash($data['password'], PASSWORD_DEFAULT),
+    'role'     => $data['role'],
+]);
 
     Profil::create([
         'id_user'      => $user->id,
