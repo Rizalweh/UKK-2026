@@ -6,6 +6,7 @@ use App\Models\Profil;
 use App\Models\User;
 use Sakuci\Controller;
 use Sakuci\Http\Request;
+use App\Models\Peminjaman;
 
 
 class PeminjamController extends Controller
@@ -82,9 +83,13 @@ class PeminjamController extends Controller
         return redirect(route('admin.peminjam.index'))->with('success', 'Data peminjam diperbarui.');
     }
 
-    public function destroy(User $user)
+   public function destroy(User $user)
     {
-        $user->delete();
-        return back()->with('success', 'Peminjam dihapus.');
+     if (Peminjaman::where('id_peminjam', $user->id)->count() > 0) {
+         return back()->with('error', 'Peminjam ini punya riwayat peminjaman, tidak bisa dihapus.');
+    }
+
+     $user->delete();
+     return back()->with('success', 'Peminjam dihapus.');
     }
 }
