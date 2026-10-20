@@ -21,11 +21,15 @@ class KategoriController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
-        $data = Kategori::FindOrFail($id);
-        $data->update($request->all());
-        return redirect(route('kategori.index'))->with('success', 'Data berhasil diubah');
-    }
+{
+    $data = Kategori::FindOrFail($id);
+    $data->update($request->validate([
+        'nama_kategori' => 'required|max:255',
+        'kode_kategori' => 'required|max:10',
+        'keterangan'    => 'nullable',
+    ]));
+    return redirect(route('kategori.index'))->with('success', 'Data berhasil diubah');
+}
 
     public function create(Request $request)
     {
@@ -33,14 +37,19 @@ class KategoriController extends Controller
     }
 
     public function store(Request $request)
-    {
-        Kategori::create($request->all());
-        return redirect(route('kategori.index'))->with('success', 'Data berhasil disimpan');
-    }
+{
+    $data = $request->validate([
+        'nama_kategori' => 'required|max:255',
+        'kode_kategori' => 'required|max:10',
+        'keterangan'    => 'nullable',
+    ]);
+    Kategori::create($data);
+    return redirect(route('kategori.index'))->with('success', 'Data berhasil disimpan');
+}
 
     public function destroy(Request $request, $id)
     {
-        $data = kategori::FindOrFail($id);
+        $data = Kategori::FindOrFail($id);
         $data->delete();
         return redirect(route('kategori.index'))->with('success', 'Data berhasil dihapus');
     }

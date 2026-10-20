@@ -10,7 +10,7 @@
         <label for="status" class="form-label small mb-1">Filter status</label>
         <select id="status" name="status" class="form-select form-select-sm" onchange="this.form.submit()">
             <option value="">Semua status</option>
-            @foreach (['pending' => 'Pending', 'disetujui' => 'Disetujui', 'ditolak' => 'Ditolak', 'menunggu_pengembalian' => 'Menunggu pengembalian', 'dikembalikan' => 'Dikembalikan'] as $val => $label)
+            @foreach (['pending' => 'Pending', 'disetujui' => 'Disetujui', 'ditolak' => 'Ditolak', 'menunggu_pengembalian' => 'Menunggu pengembalian', 'dikembalikan' => 'Dikembalikan', 'dibatalkan' => 'Dibatalkan'] as $val => $label)
                 <option value="{{ $val }}" {{ $statusFilter === $val ? 'selected' : '' }}>{{ $label }}</option>
             @endforeach
         </select>

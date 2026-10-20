@@ -27,13 +27,11 @@ class PeminjamanController extends Controller
     }
 
 
-    // Petugas: setujui pengajuan -> stok dikurangi di sini
+    // Petugas: setujui pengajuan -> stok dikurangi
     public function setujui(Request $request, $id)
     {
         $peminjaman = Peminjaman::FindOrFail($id);
         $petugas = User::current();
-
-        LogAktivitas::catat(User::current()->id, "Menyetujui pengajuan peminjaman {$peminjaman->kode_peminjaman} oleh user ID {$peminjaman->id_peminjam}");
 
         if ($peminjaman->status_peminjaman !== 'pending') {
             return redirect(route('petugas.peminjaman.index'))
@@ -47,10 +45,11 @@ class PeminjamanController extends Controller
                 ->with('error', "Stok {$alat->nama_alat} tidak mencukupi.");
         }
 
-        // Update status DULU (semacam kunci manual, karena tidak ada transaction),
-        // baru kurangi stok setelahnya.
+        // update status dulu baru kurangi stok
         $peminjaman->update(['status_peminjaman' => 'disetujui']);
         $alat->update(['stok' => $alat->stok - $peminjaman->jumlah_pinjam]);
+
+        LogAktivitas::catat(User::current()->id, "Menyetujui pengajuan peminjaman {$peminjaman->kode_peminjaman} oleh user ID {$peminjaman->id_peminjam}");
 
         return redirect(route('petugas.peminjaman.index'))
             ->with('success', 'Peminjaman disetujui, stok diperbarui.');
@@ -62,8 +61,6 @@ class PeminjamanController extends Controller
         $peminjaman = Peminjaman::FindOrFail($id);
         $petugas = User::current();
 
-        LogAktivitas::catat(User::current()->id, "Menolak pengajuan peminjaman {$peminjaman->kode_peminjaman} oleh user ID {$peminjaman->id_peminjam}");
-
         if ($peminjaman->status_peminjaman !== 'pending') {
             return redirect(route('petugas.peminjaman.index'))
                 ->with('error', 'Pengajuan ini sudah diproses sebelumnya.');
@@ -73,6 +70,8 @@ class PeminjamanController extends Controller
             'status_peminjaman' => 'ditolak',
             'catatan' => $request->input('catatan'),
         ]);
+
+        LogAktivitas::catat(User::current()->id, "Menolak pengajuan peminjaman {$peminjaman->kode_peminjaman} oleh user ID {$peminjaman->id_peminjam}");
 
         return redirect(route('petugas.peminjaman.index'))
             ->with('success', 'Peminjaman ditolak.');
@@ -220,7 +219,7 @@ public function batalkan(Request $request, $id)
         return redirect(route('peminjam.riwayat'))->with('error', 'Hanya pengajuan yang masih pending yang bisa dibatalkan.');
     }
 
-    $peminjaman->update(['status_peminjaman' => 'dibatalkan']);
+    $peminjaman->update(['status_peminjaman' => 'dibatalkan', 'catatan' => 'dibatalkan Admin']);
 
     LogAktivitas::catat($user->id, "Membatalkan pengajuan {$peminjaman->kode_peminjaman}");
 
@@ -325,8 +324,8 @@ private function idSelesai(): array
 {
     $rows = Connection::select(
         "SELECT p.id_peminjaman FROM peminjaman p
-         WHERE p.status_peminjaman = 'ditolak'
-            OR (p.status_peminjaman = 'dikembalikan' AND NOT EXISTS (
+           WHERE p.status_peminjaman IN ('ditolak', 'dibatalkan')
+             OR (p.status_peminjaman = 'dikembalikan' AND NOT EXISTS (
                 SELECT 1 FROM pengembalian g
                 WHERE g.id_peminjaman = p.id_peminjaman AND g.status_denda = 'belum_lunas'))
          ORDER BY p.id_peminjaman DESC"

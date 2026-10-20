@@ -9,6 +9,7 @@
         'pending'               => 'warning',
         'disetujui'             => 'primary',
         'ditolak'               => 'danger',
+        'dibatalkan'            => 'secondary',
         'menunggu_pengembalian' => 'info',
         'dikembalikan'          => 'success',
     ];

@@ -23,7 +23,7 @@
         <label class="form-label">Status</label>
         <select name="status" class="form-select form-select-sm">
             <option value="">Semua</option>
-            @foreach (['pending', 'disetujui', 'ditolak', 'menunggu_pengembalian', 'dikembalikan'] as $s)
+            @foreach (['pending', 'disetujui', 'ditolak', 'menunggu_pengembalian', 'dikembalikan', 'dibatalkan'] as $s)
                 <option value="{{ $s }}" {{ $statusFilter === $s ? 'selected' : '' }}>{{ $s }}</option>
             @endforeach
         </select>

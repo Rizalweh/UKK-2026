@@ -36,25 +36,36 @@ class AuthController extends Controller
             return redirect('/login')->with('error', 'Pendaftaran belum dibuka.');
         }
 
-        $data = $request->validate([
-            'username' => 'required|min:3|max:50|alpha_dash|unique:users,username',
-            'password' => 'required|min:6|confirmed',
-            'role'     => 'required|in:' . implode(',', $allowed),
-        ]);
-        
-    if ($data['role'] === 'peminjam') {
-      $profil = $request->validate([
+       $data = $request->validate([
+    'username' => 'required|min:3|max:50|alpha_dash|unique:users,username',
+    'password' => 'required|min:6|confirmed',
+    'role'     => 'required|in:' . implode(',', $allowed),
+]);
+
+// validasi profil dulu sebelum buat
+if ($data['role'] === 'peminjam') {
+    $profil = $request->validate([
         'nama_lengkap' => 'required|min:3|max:100',
         'no_hp'        => 'required|numeric',
         'alamat'       => 'nullable|max:255',
         'nis'          => 'required|numeric|unique:profil,nis',
     ]);
+}
 
-        $user = User::create([
+$user = User::create([
     'username' => $data['username'],
     'password' => password_hash($data['password'], PASSWORD_DEFAULT),
     'role'     => $data['role'],
 ]);
+
+if ($data['role'] === 'peminjam') {
+    Profil::create([
+        'id_user'      => $user->id,
+        'nama_lengkap' => $profil['nama_lengkap'],
+        'no_hp'        => $profil['no_hp'],
+        'alamat'       => $profil['alamat'],
+        'nis'          => $profil['nis'],
+    ]);
 
     Profil::create([
         'id_user'      => $user->id,
