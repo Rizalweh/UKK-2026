@@ -6,6 +6,7 @@ use Sakuci\Controller;
 use Sakuci\Http\Request;
 use App\Models\Alat;
 use App\Models\Kategori;
+use App\Models\Peminjaman;
 
 class AlatController extends Controller
 {
@@ -104,6 +105,10 @@ class AlatController extends Controller
     {
         $data = Alat::FindOrFail($id);
 
+        if (Peminjaman::where('id_alat', $data->id_alat)->count() > 0) {
+            return back()->with('error', 'Alat ini punya riwayat peminjaman, tidak bisa dihapus.');
+        }
+
         if ($data->foto_alat && file_exists($this->uploadPath() . $data->foto_alat)) {
             unlink($this->uploadPath() . $data->foto_alat);
         }
@@ -112,7 +117,7 @@ class AlatController extends Controller
         return redirect(route('alat.index'))->with('success', 'Data berhasil dihapus');
     }
 
-    // Peminjam: katalog alat. Semua alat tampil; yang stoknya habis diredupkan di view.
+    // Peminjam: katalog alat. semua alat tampil; yang stoknya habis diredupkan di view.
     public function daftarAlat(Request $request)
     {
         $kataKunci       = trim((string) $request->input('q', ''));
