@@ -66,14 +66,6 @@ if ($data['role'] === 'peminjam') {
         'alamat'       => $profil['alamat'],
         'nis'          => $profil['nis'],
     ]);
-
-    Profil::create([
-        'id_user'      => $user->id,
-        'nama_lengkap' => $profil['nama_lengkap'],
-        'no_hp'        => $profil['no_hp'],
-        'alamat'       => $profil['alamat'],
-        'nis'          => $profil['nis']
-    ]);
 }
 
 Session::put('user_id', $user->id);
