@@ -11,11 +11,27 @@ use App\Models\Peminjaman;
 
 class PeminjamController extends Controller
 {
-    public function index()
-    {
-        $data = User::where('role', 'peminjam')->orderBy('username')->paginate(10);
-        return view('core.admin.peminjam.index', compact('data'));
+    public function index(Request $request)
+{
+    $kataKunci = trim((string) $request->input('cari', ''));
+
+    $query = User::select('users.*')
+        ->leftJoin('profil', 'profil.id_user', '=', 'users.id')
+        ->where('users.role', 'peminjam')
+        ->orderBy('users.username');
+
+    if ($kataKunci !== '') {
+        $query = $query->where(function ($kondisi) use ($kataKunci) {
+            $kondisi->where('users.username', 'like', '%' . $kataKunci . '%')
+                    ->orWhere('profil.nama_lengkap', 'like', '%' . $kataKunci . '%')
+                    ->orWhere('profil.nis', 'like', '%' . $kataKunci . '%');
+        });
     }
+
+    $data = $query->with('profil')->paginate(10);
+
+    return view('core.admin.peminjam.index', compact('data', 'kataKunci'));
+}
 
     public function create()
     {
