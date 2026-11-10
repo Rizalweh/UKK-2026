@@ -42,7 +42,6 @@
                         <td>{{ $log->waktu }}</td>
                         <td>{{ $log->user->profil->nama_lengkap ?? $log->user->username ?? '(user dihapus)' }}</td>
                         <td>{{ $log->aktivitas }}</td>
-                    </form>
                     </tr>
                     @empty
                     <tr><td colspan="3" class="text-secondary">Belum ada aktivitas.</td></tr>

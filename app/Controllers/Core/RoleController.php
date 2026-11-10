@@ -54,9 +54,9 @@ class RoleController extends Controller
 
     public function update(Request $request, Role $role)
     {
-        if ($role->name === static::PROTECTED_ROLE) {
-            abort(403, 'Role "admin" tidak bisa diubah.');
-        }
+         if (in_array($role->name, static::PROTECTED_ROLES, true)) {
+        abort(403, 'Role "' . $role->name . '" dipakai sehingga tidak bisa dihapus dan diubah.');
+    }
 
         $data = $request->validate([
             'name' => 'required|alpha_dash|max:50',
@@ -87,27 +87,33 @@ class RoleController extends Controller
         return back()->with('success', 'Role "' . $oldName . '" berhasil diperbarui.');
     }
 
-    public function destroy(Role $role)
-    {
-        if ($role->name === static::PROTECTED_ROLE) {
-            abort(403, 'Role "admin" tidak bisa dihapus.');
-        }
+       protected const PROTECTED_ROLES = ['admin', 'petugas', 'peminjam'];
 
-        $pemakai = User::where('role', $role->name)->count();
-
-        $name = $role->name;
-        User::where('role', $name)->delete();
-        $role->delete();
-
-        $this->removeRouteFor($name);
-        $this->removeMiddlewareFor($name);
-
-        $message = 'Role "' . $name . '" berhasil dihapus.';
-        $message .= $pemakai > 0 ? ' ' . $pemakai . ' user pemilik role ini ikut dihapus.' : '';
-
-        return back()->with('success', $message);
+public function destroy(Role $role)
+{
+    if (in_array($role->name, static::PROTECTED_ROLES, true)) {
+        abort(403, 'Role "' . $role->name . '" adalah role inti dan tidak bisa dihapus.');
     }
 
+    $name    = $role->name;
+    $pemakai = User::where('role', $name)->count();
+
+    // Tolak kalau masih dipakai user
+    if ($pemakai > 0) {
+        return back()->with(
+            'error',
+            'Role "' . $name . '" tidak bisa dihapus karena masih dipakai ' . $pemakai
+            . ' user. Pindahkan atau hapus user tersebut lebih dulu.'
+        );
+    }
+
+    $role->delete();
+
+    $this->removeRouteFor($name);
+    $this->removeMiddlewareFor($name);
+
+    return back()->with('success', 'Role "' . $name . '" berhasil dihapus.');
+}
     /*
     |----------------------------------------------------------------------
     | Middleware otomatis
