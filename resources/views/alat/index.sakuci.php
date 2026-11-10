@@ -8,6 +8,23 @@
 @endphp
 @include('partials.page-head', ['judul' => 'Data Alat', 'aksi' => ['Tambah Alat', route('alat.create')]])
 
+<form method="get" action="{{ route('alat.index') }}" class="d-flex flex-wrap gap-2 mb-3">
+    <input type="search" name="cari" value="{{ $kataKunci }}" class="form-control form-control-sm"
+           style="max-width: 260px" placeholder="Cari nama atau kode alat">
+
+    <select name="kategori" class="form-select form-select-sm" style="max-width: 200px" onchange="this.form.submit()">
+        <option value="">Semua kategori</option>
+        @foreach ($kategoriList as $k)
+            <option value="{{ $k->id_kategori }}" {{ $kategori === (string) $k->id_kategori ? 'selected' : '' }}>{{ $k->nama_kategori }}</option>
+        @endforeach
+    </select>
+
+    <button type="submit" class="btn btn-sm btn-brand">Cari</button>
+    @if ($kataKunci !== '' || $kategori !== '')
+        <a href="{{ route('alat.index') }}" class="btn btn-sm btn-outline-secondary">Reset</a>
+    @endif
+</form>
+
 <div class="tbl-card table-responsive">
     <table class="table table-hover align-middle">
         <thead>

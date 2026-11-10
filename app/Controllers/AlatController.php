@@ -19,10 +19,30 @@ class AlatController extends Controller
     }
 
     public function index(Request $request)
-    {
-        $data = Alat::OrderBy('id_alat', 'desc')->paginate(5);
-        return view('alat.index', compact('data'));
+{
+    $kataKunci = trim((string) $request->input('cari', ''));
+    $kategori  = (string) $request->input('kategori', '');
+
+    $query = Alat::with('kategori')->orderBy('id_alat', 'desc');
+
+    if ($kataKunci !== '') {
+        $query = $query->where(function ($kondisi) use ($kataKunci) {
+            $kondisi->where('nama_alat', 'like', '%' . $kataKunci . '%')
+                    ->orWhere('kode_alat', 'like', '%' . $kataKunci . '%');
+        });
     }
+
+    if ($kategori !== '') {
+        $query = $query->where('id_kategori', $kategori);
+    }
+
+    return view('alat.index', [
+        'data'         => $query->paginate(5),
+        'kataKunci'    => $kataKunci,
+        'kategori'     => $kategori,
+        'kategoriList' => Kategori::orderBy('nama_kategori')->get(),
+    ]);
+}
 
     public function create(Request $request)
     {
