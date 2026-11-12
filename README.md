@@ -1,3 +1,11 @@
+## 🔑 Akun Demo
+
+| Role     | Username   | Password     |
+|----------|------------|--------------|
+| Admin    | `admin`    | `rahasia123` |
+| Petugas  | `petugas1` | `petugas1`   |
+| Peminjam | `peminjam` | `peminjam`   |
+
 # Sakuci Framework
 
 Kerangka PHP ringan bergaya Laravel -- **Route, Model, View, Controller** -- tanpa Composer,
